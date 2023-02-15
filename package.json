@@ -1,0 +1,58 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.ts",
+  "type": "module",
+  "scripts": {
+    "start": "NODE_ENV=production tsx -r dotenv/config src/server.ts",
+    "dev": "NODE_ENV=development tsx watch -r dotenv/config src/server.ts",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "prepare": "husky install",
+    "lint": "eslint --fix src/**/*.ts",
+    "format": "prettier --write src/",
+    "type-check": "tsc --noEmit"
+  },
+  "author": "ThyDevourer <pedro@ivanpartida.xyz>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
+    "@faker-js/faker": "^7.6.0",
+    "@tsconfig/node18-strictest-esm": "^1.0.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^18.11.17",
+    "@typescript-eslint/eslint-plugin": "^5.47.0",
+    "@typescript-eslint/parser": "^5.47.0",
+    "@vitest/coverage-c8": "^0.27.0",
+    "eslint": "^8.30.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "mongodb-memory-server": "^8.11.0",
+    "pino-pretty": "^9.1.1",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4",
+    "vitest": "^0.27.0"
+  },
+  "dependencies": {
+    "@fastify/jwt": "^6.5.0",
+    "@fastify/mongodb": "^6.2.0",
+    "@fastify/type-provider-typebox": "^2.4.0",
+    "@sinclair/typebox": "^0.25.21",
+    "ajv": "^8.11.2",
+    "bcrypt": "^5.1.0",
+    "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.10.2",
+    "irctokens": "^2.0.0",
+    "mongodb": "^5.0.1",
+    "nanoid": "^4.0.0",
+    "remeda": "^1.3.0",
+    "slugify": "^1.6.5",
+    "tsx": "^3.12.2"
+  },
+  "lint-staged": {
+    "*.ts": "eslint && prettier --check"
+  }
+}
