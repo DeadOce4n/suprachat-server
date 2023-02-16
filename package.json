@@ -20,7 +20,6 @@
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@faker-js/faker": "^7.6.0",
-    "@tsconfig/node18-strictest-esm": "^1.0.1",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^18.11.17",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
