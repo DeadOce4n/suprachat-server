@@ -3,6 +3,7 @@ import jwt from '@fastify/jwt'
 
 import * as features from '@features/features.js'
 import getErrorHandler from '@utils/error.js'
+import { LOG_LEVEL } from '@utils/const'
 
 const envToLogger = {
   development: {
@@ -15,7 +16,9 @@ const envToLogger = {
       }
     }
   },
-  production: true,
+  production: {
+    level: LOG_LEVEL
+  },
   test: false
 } as const
 

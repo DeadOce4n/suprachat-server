@@ -7,6 +7,7 @@ export const IRCD_PORT = Number(process.env.IRCD_PORT)
 export const WEBIRC_PASS = process.env.WEBIRC_PASS
 export const PORT = Number(process.env.PORT)
 export const SECRET_KEY = process.env.SECRET_KEY
+export const LOG_LEVEL = process.env.LOG_LEVEL
 
 export const FORBIDDEN_CHARS = ' ,*?.!:<>\'";#~&@%+-'.split('')
 

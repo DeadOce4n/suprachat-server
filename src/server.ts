@@ -7,6 +7,8 @@ process.on('SIGTERM', () => process.exit(1))
 
 const server = createApp()
 
+server.log.debug(MONGO_URI)
+
 server.register(mongodb, {
   forceClose: true,
   url: MONGO_URI,

@@ -17,6 +17,7 @@ declare global {
       IRCD_HOST: string
       WEBIRC_PASS: string
       SECRET_KEY: string
+      LOG_LEVEL: 'trace' | 'debug' | 'info' | 'warn' | 'error'
     }
   }
 }

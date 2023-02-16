@@ -1,7 +1,8 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
-import { ObjectId, WithId } from 'mongodb'
+import { ObjectId } from '@fastify/mongodb'
+import type { WithId } from 'mongodb'
 
 import { errorSchema } from '@common/schemas'
 import { userWithOidSchema, type User } from '@features/users/module.js'
@@ -68,13 +69,9 @@ export default async function (fastify: FastifyInstance) {
       const ircClient = new IRCClient(request.ip, this.log)
       await ircClient.verify({ username: user.nick, code })
 
-      const updatedUser = (
-        await users.findOneAndUpdate(
-          { _id: user._id },
-          { $set: { verified: true } },
-          { returnDocument: 'after' }
-        )
-      ).value as WithId<User>
+      await users.updateOne({ _id: user._id }, { $set: { verified: true } })
+
+      const updatedUser = await users.findOne({ _id: new ObjectId(userId) }) as WithId<User>
 
       return reply.code(200).send({
         success: true,
