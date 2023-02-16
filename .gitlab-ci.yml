@@ -4,12 +4,12 @@ default:
     - corepack enable
     - pnpm config set store-dir .pnpm-store
 
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - build
   - test
   - deploy
 
-type-check-job:       # This job runs in the build stage, which runs first.
+type-check:
   stage: build
   script:
     - pnpm install --frozen-lockfile
@@ -21,18 +21,20 @@ type-check-job:       # This job runs in the build stage, which runs first.
     paths:
       - .pnpm-store
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+unit-test:
+  stage: test
   script:
+    - pnpm install
     - pnpm test
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+lint:
+  stage: test
   script:
+    - pnpm install
     - pnpm lint && pnpm format
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+deploy:
+  stage: deploy
   environment: production
   script:
     - echo "Deploying application..."
