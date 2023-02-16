@@ -26,7 +26,7 @@ unit-test:
   script:
     - apt update && apt install -y curl
     - pnpm install
-    - SECRET_KEY=${SECRET_KEY} pnpm test
+    - SECRET_KEY=$SECRET_KEY pnpm test
 
 lint:
   stage: test
