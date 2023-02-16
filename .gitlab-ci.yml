@@ -24,6 +24,7 @@ type-check:
 unit-test:
   stage: test
   script:
+    - apt update && apt install -y curl libcurl-dev
     - pnpm install
     - pnpm test
 
