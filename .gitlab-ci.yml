@@ -53,6 +53,7 @@ deploy:
     entrypoint: ['']
   script:
     - kubectl config get-contexts
+  before_script: []
   # environment: production
   # script:
   #   - echo "Deploying application..."
