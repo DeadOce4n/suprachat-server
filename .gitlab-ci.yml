@@ -26,6 +26,12 @@ lint:
   script:
     - pnpm install --frozen-lockfile
     - pnpm style-check
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
 
 unit-test:
   stage: test
@@ -33,6 +39,12 @@ unit-test:
     - apt update && apt install -y curl
     - pnpm install --frozen-lockfile
     - SECRET_KEY=$SECRET_KEY pnpm test
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
 
 deploy:
   stage: deploy
