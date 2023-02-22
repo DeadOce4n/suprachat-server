@@ -24,14 +24,14 @@ type-check:
 lint:
   stage: build
   script:
-    - pnpm install
+    - pnpm install --frozen-lockfile
     - pnpm style-check
 
 unit-test:
   stage: test
   script:
     - apt update && apt install -y curl
-    - pnpm install
+    - pnpm install --frozen-lockfile
     - SECRET_KEY=$SECRET_KEY pnpm test
 
 deploy:
