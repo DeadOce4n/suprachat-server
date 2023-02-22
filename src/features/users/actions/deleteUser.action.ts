@@ -2,9 +2,9 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 
-import { errorSchema } from '@common/schemas'
+import { errorSchema } from '@common/schemas.js'
 import type { User, UserSchema } from '@features/users/module.js'
-import { ObjectIdString, Roles } from '@utils/const'
+import { ObjectIdString, Roles } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
 
 const paramsSchema = Type.Object(

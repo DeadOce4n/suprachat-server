@@ -3,7 +3,7 @@ import { Type } from '@sinclair/typebox'
 import dayjs from 'dayjs'
 import type { FastifyInstance } from 'fastify'
 
-import { errorSchema } from '@common/schemas'
+import { errorSchema } from '@common/schemas.js'
 import {
   userSchema,
   userWithOidSchema,
@@ -11,7 +11,7 @@ import {
 } from '@features/users/module.js'
 import IRCClient from '@services/irc.service.js'
 import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
-import { Roles } from '@utils/const'
+import { Roles } from '@utils/const.js'
 
 const bodySchema = Type.Omit(userSchema, [
   'registered_date',

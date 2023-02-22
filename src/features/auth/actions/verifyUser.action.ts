@@ -4,11 +4,11 @@ import type { FastifyInstance } from 'fastify'
 import { ObjectId } from '@fastify/mongodb'
 import type { WithId } from 'mongodb'
 
-import { errorSchema } from '@common/schemas'
+import { errorSchema } from '@common/schemas.js'
 import { userWithOidSchema, type User } from '@features/users/module.js'
-import IRCClient from '@services/irc.service'
-import { ObjectIdString } from '@utils/const'
-import { createResponseSchema } from '@utils/func'
+import IRCClient from '@services/irc.service.js'
+import { ObjectIdString } from '@utils/const.js'
+import { createResponseSchema } from '@utils/func.js'
 
 const verifyUserSchema = Type.Object(
   {
