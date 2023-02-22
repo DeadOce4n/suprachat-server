@@ -32,7 +32,7 @@ lint:
   stage: test
   script:
     - pnpm install
-    - pnpm lint && pnpm format
+    - pnpm style-check
 
 deploy:
   stage: deploy
