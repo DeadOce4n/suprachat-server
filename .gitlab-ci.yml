@@ -48,7 +48,12 @@ unit-test:
 
 deploy:
   stage: deploy
-  environment: production
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - kubectl config get-contexts
+  # environment: production
+  # script:
+  #   - echo "Deploying application..."
+  #   - echo "Application successfully deployed."
