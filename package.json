@@ -12,6 +12,7 @@
     "prepare": "husky install",
     "lint": "eslint --fix src/**/*.ts",
     "format": "prettier --write src/",
+    "style-check": "eslint src/**/*.ts && prettier --check",
     "type-check": "tsc --noEmit"
   },
   "author": "ThyDevourer <pedro@ivanpartida.xyz>",
