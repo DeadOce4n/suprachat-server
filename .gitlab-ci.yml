@@ -53,6 +53,8 @@ deploy:
     entrypoint: ['']
   script:
     - kubectl config get-contexts
+    - kubectl config use-context suprachat/backend:suprachat-backend
+    - kubectl get-pods
   before_script: []
   # environment: production
   # script:
