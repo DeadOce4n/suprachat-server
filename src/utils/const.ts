@@ -210,3 +210,8 @@ export const countries = [
 ] as const
 
 export const ObjectIdString = Type.String({ pattern: '^[0-9a-fA-F]{24}$' })
+
+export enum Roles {
+  Normal = 'normal',
+  Admin = 'admin'
+}

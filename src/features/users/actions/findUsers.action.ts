@@ -2,9 +2,9 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 
-import { errorSchema } from '@common/schemas'
-import { createResponseSchema } from '@utils/func'
-import { userWithOidSchema, type User } from '../entities/user.model'
+import { errorSchema } from '@common/schemas.js'
+import { createResponseSchema } from '@utils/func.js'
+import { userWithOidSchema, type User } from '../entities/user.model.js'
 
 const qsSchema = Type.Object({
   offset: Type.Optional(Type.Number()),

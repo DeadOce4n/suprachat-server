@@ -1,6 +1,6 @@
 import { Type, type Static } from '@sinclair/typebox'
 
-import { countries } from '@utils/const'
+import { countries, Roles } from '@utils/const'
 import { addOidToSchema, StringEnum } from '@utils/func'
 import type { Prettify } from '@utils/types'
 
@@ -15,12 +15,13 @@ export const userSchema = Type.Object(
     active: Type.Boolean({ default: true }),
     registered_date: Type.String({ format: 'date-time' }),
     password_from: StringEnum(['ergo', 'supra']),
-    picture: Type.Optional(Type.String({ format: 'uri' }))
+    picture: Type.Optional(Type.String({ format: 'uri' })),
+    role: Type.Enum(Roles, { default: Roles.Normal })
   },
   { additionalProperties: false }
 )
 
-type UserSchema = Static<typeof userSchema>
+export type UserSchema = Static<typeof userSchema>
 
 export const userWithOidSchema = addOidToSchema(userSchema)
 
