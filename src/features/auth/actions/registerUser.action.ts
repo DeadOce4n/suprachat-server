@@ -11,8 +11,13 @@ import {
 } from '@features/users/module.js'
 import IRCClient from '@services/irc.service.js'
 import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
+import { Roles } from '@utils/const'
 
-const bodySchema = Type.Omit(userSchema, ['registered_date', 'password_from'])
+const bodySchema = Type.Omit(userSchema, [
+  'registered_date',
+  'password_from',
+  'role'
+])
 
 const responseSchema = createResponseSchema(
   Type.Omit(userWithOidSchema, ['password'])
@@ -96,7 +101,8 @@ export default async function (fastify: FastifyInstance) {
         ...request.body,
         password: await generatePasswordHash(password),
         registered_date: dayjs().toDate(),
-        password_from: 'supra'
+        password_from: 'supra',
+        role: Roles.Normal
       }
 
       const { insertedId } = await users.insertOne(newUser)

@@ -1,16 +1,13 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
-import type { WithId } from 'mongodb'
 
-import { errorSchema } from '@common/schemas.js'
-import {
-  userSchema,
-  userWithOidSchema,
-  type User,
-  type UserSchema
-} from '../entities/user.model.js'
-import { ObjectIdString, Roles } from '@utils/const.js'
+import { errorSchema } from '@common/schemas'
+import type {
+  User,
+  UserSchema
+} from '@features/users/module.js'
+import { ObjectIdString, Roles } from '@utils/const'
 import { createResponseSchema } from '@utils/func.js'
 
 const paramsSchema = Type.Object(
@@ -20,24 +17,16 @@ const paramsSchema = Type.Object(
   { additionalProperties: false }
 )
 
-const bodySchema = Type.Partial(
-  Type.Omit(userSchema, ['password', 'active', 'registered_date'], {
-    additionalProperties: false
-  }),
-  { additionalProperties: false }
-)
-
 const responseSchema = createResponseSchema(
-  Type.Omit(userWithOidSchema, ['password'])
+  Type.Null()
 )
 
 export default async function (fastify: FastifyInstance) {
-  fastify.withTypeProvider<TypeBoxTypeProvider>().patch(
+  fastify.withTypeProvider<TypeBoxTypeProvider>().delete(
     '/:_id',
     {
       schema: {
         params: paramsSchema,
-        body: bodySchema,
         response: {
           200: responseSchema,
           404: errorSchema,
@@ -78,40 +67,34 @@ export default async function (fastify: FastifyInstance) {
         UserSchema & { _id: string }
       >()
 
-      if (
-        decodedToken._id !== userId.toString() &&
-        decodedToken.role !== Roles.Admin
-      ) {
+      if (decodedToken.role !== Roles.Admin) {
         return reply.code(409).send({
           success: false,
           errors: [
             {
               name: 'notEnoughPrivileges',
-              message: "You must be an admin to modify another user's data"
+              message: "You must be an admin to delete an user"
             }
           ]
         })
       }
 
-      const updatedUser = (
-        await users.findOneAndUpdate(
-          { _id: userId },
-          {
-            $set: request.body
-          },
-          { returnDocument: 'after' }
-        )
-      ).value as WithId<User>
+      await users.findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            active: false
+          }
+        },
+        { returnDocument: 'after' }
+      )
 
       return reply.code(200).send({
         success: true,
-        data: {
-          ...updatedUser,
-          _id: userId.toString(),
-          registered_date: user.registered_date.toISOString()
-        },
-        message: 'User modified successfully'
+        data: null,
+        message: 'User deleted successfully'
       })
     }
   )
 }
+

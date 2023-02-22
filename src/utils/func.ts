@@ -1,7 +1,5 @@
 import { TObject, Type, type TSchema } from '@sinclair/typebox'
 import { createHash, pbkdf2, randomBytes } from 'crypto'
-import { nanoid } from 'nanoid/async'
-import slugify from 'slugify'
 import { promisify } from 'util'
 import bcrypt from 'bcrypt'
 
@@ -52,9 +50,6 @@ export const parseSortOperator = (operator?: string) => {
   query[field] = criteria
   return query
 }
-
-export const createSlug = async (title: string) =>
-  `${slugify(title, { lower: true })}-${await nanoid(10)}`
 
 const asyncRandomBytes = promisify(randomBytes)
 const asyncPbkdf2 = promisify(pbkdf2)

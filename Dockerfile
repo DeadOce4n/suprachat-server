@@ -10,5 +10,8 @@ RUN corepack enable
 RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm rebuild
 RUN pnpm prune --prod --config.ignore-scripts=true
+RUN npm install -g tsx
+
+EXPOSE 3000
 
 CMD ["pnpm", "start"]

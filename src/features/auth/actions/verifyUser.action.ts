@@ -69,15 +69,17 @@ export default async function (fastify: FastifyInstance) {
       const ircClient = new IRCClient(request.ip, this.log)
       await ircClient.verify({ username: user.nick, code })
 
-      await users.updateOne({ _id: user._id }, { $set: { verified: true } })
-
-      const updatedUser = await users.findOne({ _id: new ObjectId(userId) }) as WithId<User>
+      const updatedUser = (await users.findOneAndUpdate(
+        { _id: user._id },
+        { $set: { verified: true } },
+        { returnDocument: 'after' }
+      )).value as WithId<User>
 
       return reply.code(200).send({
         success: true,
         data: {
           ...updatedUser,
-          _id: (updatedUser?._id as ObjectId).toString(),
+          _id: updatedUser._id.toString(),
           registered_date: updatedUser.registered_date.toISOString()
         },
         message: `User ${user.nick} verified successfully`
