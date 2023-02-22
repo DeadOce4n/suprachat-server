@@ -21,18 +21,18 @@ type-check:
     paths:
       - .pnpm-store
 
+lint:
+  stage: build
+  script:
+    - pnpm install
+    - pnpm style-check
+
 unit-test:
   stage: test
   script:
     - apt update && apt install -y curl
     - pnpm install
     - SECRET_KEY=$SECRET_KEY pnpm test
-
-lint:
-  stage: test
-  script:
-    - pnpm install
-    - pnpm style-check
 
 deploy:
   stage: deploy
