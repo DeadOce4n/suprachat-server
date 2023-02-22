@@ -3,10 +3,7 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 
 import { errorSchema } from '@common/schemas'
-import type {
-  User,
-  UserSchema
-} from '@features/users/module.js'
+import type { User, UserSchema } from '@features/users/module.js'
 import { ObjectIdString, Roles } from '@utils/const'
 import { createResponseSchema } from '@utils/func.js'
 
@@ -17,9 +14,7 @@ const paramsSchema = Type.Object(
   { additionalProperties: false }
 )
 
-const responseSchema = createResponseSchema(
-  Type.Null()
-)
+const responseSchema = createResponseSchema(Type.Null())
 
 export default async function (fastify: FastifyInstance) {
   fastify.withTypeProvider<TypeBoxTypeProvider>().delete(
@@ -73,7 +68,7 @@ export default async function (fastify: FastifyInstance) {
           errors: [
             {
               name: 'notEnoughPrivileges',
-              message: "You must be an admin to delete an user"
+              message: 'You must be an admin to delete an user'
             }
           ]
         })
@@ -97,4 +92,3 @@ export default async function (fastify: FastifyInstance) {
     }
   )
 }
-
