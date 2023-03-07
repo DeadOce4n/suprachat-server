@@ -103,9 +103,7 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
-      let checkPasswdHashFunc: (
-        ...params: Parameters<typeof checkPasswordHash>
-      ) => ReturnType<typeof checkPasswordHash>
+      let checkPasswdHashFunc: typeof checkPasswordHash
 
       if (user.password_from === 'ergo') {
         this.log.info(

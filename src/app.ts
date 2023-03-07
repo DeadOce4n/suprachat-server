@@ -3,7 +3,7 @@ import jwt from '@fastify/jwt'
 
 import * as features from '@features/features.js'
 import getErrorHandler from '@utils/error.js'
-import { LOG_LEVEL } from '@utils/const'
+import { LOG_LEVEL } from '@utils/const.js'
 
 const envToLogger = {
   development: {

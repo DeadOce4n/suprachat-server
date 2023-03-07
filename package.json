@@ -9,17 +9,19 @@
     "dev": "NODE_ENV=development tsx watch -r dotenv/config src/server.ts",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prepare": "husky install",
+    "dependencies": "husky install",
     "lint": "eslint --fix src/**/*.ts",
     "format": "prettier --write src/",
     "style-check": "eslint src/**/*.ts && prettier --check src/",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "ci:run": "tsx ./.dagger/index.ts"
   },
   "author": "ThyDevourer <pedro@ivanpartida.xyz>",
   "license": "GPL-3.0",
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
+    "@dagger.io/dagger": "^0.3.5",
     "@faker-js/faker": "^7.6.0",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^18.11.17",
@@ -29,12 +31,12 @@
     "eslint": "^8.30.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
-    "mongodb": "^4.0.1",
+    "mongodb": "^4.14.0",
     "mongodb-memory-server": "^8.11.0",
     "pino-pretty": "^9.1.1",
     "prettier": "^2.8.1",
-    "tsx": "^3.12.3",
     "typescript": "^4.9.4",
+    "vite": "^4.1.4",
     "vite-tsconfig-paths": "^4.0.5",
     "vitest": "^0.27.0"
   },
@@ -48,8 +50,8 @@
     "dotenv": "^16.0.3",
     "fastify": "^4.12.0",
     "irctokens": "^2.0.0",
-    "nanoid": "^4.0.0",
-    "remeda": "^1.3.0"
+    "remeda": "^1.3.0",
+    "tsx": "^3.12.3"
   },
   "lint-staged": {
     "*.ts": "eslint && prettier --check"
