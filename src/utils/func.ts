@@ -3,7 +3,7 @@ import { createHash, pbkdf2, randomBytes } from 'crypto'
 import { promisify } from 'util'
 import bcrypt from 'bcrypt'
 
-import { oidSchema } from '@common/schemas'
+import { oidSchema } from '@common/schemas.js'
 
 export const createResponseSchema = <TData extends TSchema>(
   dataSchema: TData

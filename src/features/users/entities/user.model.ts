@@ -1,8 +1,8 @@
 import { Type, type Static } from '@sinclair/typebox'
 
-import { countries, Roles } from '@utils/const'
-import { addOidToSchema, StringEnum } from '@utils/func'
-import type { Prettify } from '@utils/types'
+import { countries, Roles } from '@utils/const.js'
+import { addOidToSchema, StringEnum } from '@utils/func.js'
+import type { Prettify } from '@utils/types.js'
 
 export const userSchema = Type.Object(
   {

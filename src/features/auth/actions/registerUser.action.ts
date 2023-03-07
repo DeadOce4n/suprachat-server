@@ -10,8 +10,8 @@ import {
   type User
 } from '@features/users/module.js'
 import IRCClient from '@services/irc.service.js'
-import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
 import { Roles } from '@utils/const.js'
+import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
 
 const bodySchema = Type.Omit(userSchema, [
   'registered_date',

@@ -7,8 +7,8 @@ import {
   IRCD_HOST,
   IRCD_PORT,
   WEBIRC_PASS
-} from '@utils/const'
-import { APIError } from '@utils/error'
+} from '@utils/const.js'
+import { APIError } from '@utils/error.js'
 
 type RegisterParams = {
   username: string
