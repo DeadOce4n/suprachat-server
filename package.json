@@ -1,7 +1,7 @@
 {
-  "name": "template",
+  "name": "suprachat-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Fastify server for Suprachat's IRCd",
   "main": "src/app.ts",
   "type": "module",
   "scripts": {
