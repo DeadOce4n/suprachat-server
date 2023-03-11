@@ -59,7 +59,7 @@ export default async function (fastify: FastifyInstance) {
         data: users.map((user) => ({
           ...user,
           _id: user._id.toString(),
-          registered_date: user.registered_date.toString()
+          registered_date: user.registered_date.toISOString()
         })),
         meta: {
           count: users.length,
