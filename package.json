@@ -19,8 +19,8 @@
   "author": "ThyDevourer <pedro@ivanpartida.xyz>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@commitlint/cli": "^17.3.0",
-    "@commitlint/config-conventional": "^17.3.0",
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
     "@dagger.io/dagger": "^0.3.5",
     "@faker-js/faker": "^7.6.0",
     "@types/bcrypt": "^5.0.0",
@@ -30,7 +30,7 @@
     "@vitest/coverage-c8": "^0.27.0",
     "eslint": "^8.30.0",
     "husky": "^8.0.2",
-    "lint-staged": "^13.1.0",
+    "lint-staged": "^13.1.2",
     "mongodb": "^4.14.0",
     "mongodb-memory-server": "^8.11.0",
     "pino-pretty": "^9.1.1",
@@ -54,6 +54,12 @@
     "tsx": "^3.12.3"
   },
   "lint-staged": {
-    "*.ts": "eslint && prettier --check"
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": ["@commitlint/config-conventional"]
   }
 }
