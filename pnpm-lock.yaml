@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@commitlint/cli': ^17.3.0
-  '@commitlint/config-conventional': ^17.3.0
+  '@commitlint/cli': ^17.4.3
+  '@commitlint/config-conventional': ^17.4.3
   '@dagger.io/dagger': ^0.3.5
   '@faker-js/faker': ^7.6.0
   '@fastify/jwt': ^6.5.0
@@ -21,7 +21,7 @@ specifiers:
   fastify: ^4.12.0
   husky: ^8.0.2
   irctokens: ^2.0.0
-  lint-staged: ^13.1.0
+  lint-staged: ^13.1.2
   mongodb: ^4.14.0
   mongodb-memory-server: ^8.11.0
   pino-pretty: ^9.1.1
