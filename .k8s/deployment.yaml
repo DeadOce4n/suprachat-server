@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: suprachat
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: suprachat-backend
+  namespace: suprachat
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+  selector:
+    app: suprachat-backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suprachat-backend
+  namespace: suprachat
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: suprachat-backend
+  template:
+    metadata:
+      labels:
+        app: suprachat-backend
+    spec:
+      containers:
+        - name: suprachat-backend
+          image: <IMAGE>
+          ports:
+            - name: web
+              containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: sc-backend-env
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sc-backend
+                  key: SECRET_KEY
+            - name: WEBIRC_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: sc-backend
+                  key: WEBIRC_PASS
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: suprachat-backend
+  namespace: suprachat
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  tls:
+    - hosts:
+      - beta-api.suprachat.net
+  rules:
+    - host: beta-api.suprachat.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: suprachat-backend
+                port:
+                  name: web
