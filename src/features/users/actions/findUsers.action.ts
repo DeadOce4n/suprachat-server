@@ -45,8 +45,6 @@ export default async function (fastify: FastifyInstance) {
 
       const query = filter ? { nick: { $regex: filter, $options: 'i' } } : {}
 
-      this.log.info(query)
-
       const users = await collection
         .find(query, { skip: offset, limit, sort: [['nick', 1]] })
         .toArray()
