@@ -1,9 +1,10 @@
 import fastify from 'fastify'
 import jwt from '@fastify/jwt'
+import cors from '@fastify/cors'
 
 import * as features from '@features/features.js'
 import getErrorHandler from '@utils/error.js'
-import { LOG_LEVEL } from '@utils/const.js'
+import { CORS_ORIGINS, LOG_LEVEL } from '@utils/const.js'
 
 const envToLogger = {
   development: {
@@ -37,7 +38,8 @@ const createApp = (opts: typeof defaultOpts = {}) => {
       'IRCD_HOST',
       'IRCD_PORT',
       'WEBIRC_PASS',
-      'SECRET_KEY'
+      'SECRET_KEY',
+      'CORS_ORIGINS'
     ].filter((env) => !process.env[env])
     if (envVarsNotFound.length > 0) {
       app.log.error(
@@ -48,6 +50,9 @@ const createApp = (opts: typeof defaultOpts = {}) => {
   }
   app.register(jwt, {
     secret: process.env.SECRET_KEY
+  })
+  app.register(cors, {
+    origin: CORS_ORIGINS
   })
   Object.entries(features).forEach(([name, actions]) =>
     Object.values(actions).forEach((action) =>

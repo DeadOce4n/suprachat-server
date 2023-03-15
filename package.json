@@ -43,6 +43,7 @@
     "yaml": "^2.2.1"
   },
   "dependencies": {
+    "@fastify/cors": "^8.2.1",
     "@fastify/jwt": "^6.5.0",
     "@fastify/mongodb": "^6.2.0",
     "@fastify/type-provider-typebox": "^2.4.0",

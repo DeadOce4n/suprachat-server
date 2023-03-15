@@ -18,6 +18,7 @@ declare global {
       WEBIRC_PASS: string
       SECRET_KEY: string
       LOG_LEVEL: 'trace' | 'debug' | 'info' | 'warn' | 'error'
+      CORS_ORIGINS: string
     }
   }
 }
