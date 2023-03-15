@@ -51,9 +51,11 @@ const createApp = (opts: typeof defaultOpts = {}) => {
   app.register(jwt, {
     secret: process.env.SECRET_KEY
   })
-  app.register(cors, {
-    origin: CORS_ORIGINS
-  })
+  if (process.env.NODE_ENV !== 'test') {
+    app.register(cors, {
+      origin: CORS_ORIGINS
+    })
+  }
   Object.entries(features).forEach(([name, actions]) =>
     Object.values(actions).forEach((action) =>
       app

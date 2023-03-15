@@ -8,7 +8,7 @@ export const WEBIRC_PASS = process.env.WEBIRC_PASS
 export const PORT = Number(process.env.PORT)
 export const SECRET_KEY = process.env.SECRET_KEY
 export const LOG_LEVEL = process.env.LOG_LEVEL
-export const CORS_ORIGINS = process.env.CORS_ORIGINS.split(',')
+export const CORS_ORIGINS = (process.env.CORS_ORIGINS ?? '').split(',')
 
 export const FORBIDDEN_CHARS = ' ,*?.!:<>\'";#~&@%+-'.split('')
 
