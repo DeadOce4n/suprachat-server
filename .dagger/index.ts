@@ -7,7 +7,7 @@ import path from 'path'
 import YAML from 'yaml'
 
 try {
-  const envPath = path.resolve('./.k8s/.env')
+  const envPath = path.resolve('./.dagger/.env')
   await fs.access(envPath)
   dotenv.config({ path: envPath })
 } catch (e) {
@@ -27,8 +27,9 @@ const include = [
 connect(
   async (client) => {
     const nodeCache = client.cacheVolume('node')
-    const source = client.host().directory(path.resolve('.'), {
-      include
+    const source = client.host().directory('.', {
+      include,
+      exclude: ['node_modules/']
     })
 
     // Stage 1: Lint, format, typecheck, test
@@ -53,41 +54,23 @@ connect(
       .withExec(['apt-get', 'install', '-y', 'curl'])
       .withExec(['pnpm', 'install', '--frozen-lockfile'])
 
-    await Promise.all([
-      test.withExec(['pnpm', 'lint']).exitCode(),
-      test.withExec(['pnpm', 'format']).exitCode(),
-      test.withExec(['pnpm', 'type-check']).exitCode(),
-      test.withExec(['pnpm', 'coverage']).exitCode()
-    ])
+    await test.withExec(['pnpm', 'lint']).exitCode()
+    await test.withExec(['pnpm', 'format']).exitCode()
+    await test.withExec(['pnpm', 'type-check']).exitCode()
+    await test.withExec(['pnpm', 'coverage']).exitCode()
 
     // Stage 2: Build image
     if (process.env.CI_PIPELINE_SOURCE !== 'merge_request_event') {
       console.log('Building and uploading image...')
 
-      const build = client
-        .container()
-        .from('node:18-slim')
-        .withDirectory(
-          '/home/node/app',
-          client.host().directory(path.resolve('.')),
-          { include }
-        )
-        .withExec(['chown', '-R', 'node:node', '/home/node/app'])
-        .withExec(['apt-get', 'update'])
-        .withExec(['apt-get', 'install', '-y', 'curl'])
-        .withExec(['corepack', 'enable'])
-        .withExec([
-          'pnpm',
-          'config',
-          'set',
-          'store-dir',
-          '/home/node/.pnpm-store'
-        ])
-        .withExec(['mkdir', '/home/node/.pnpm-store'])
-        .withExec(['chown', '-R', 'node:node', '/home/node/.pnpm-store'])
+      const build = test
+        .withoutMount('/home/node/app')
+        .withDirectory('/home/node/app', client.host().directory('.'), {
+          include,
+          exclude: ['node_modules/']
+        })
         .withMountedCache('/home/node/.pnpm-store', nodeCache)
-        .withWorkdir('/home/node/app')
-        .withExec(['pnpm', 'install', '--prod', '--frozen-lockfile'])
+        .withExec(['pnpm', 'prune', '--prod'])
         .withEntrypoint(['pnpm', 'start'])
 
       const uuid = randomUUID()

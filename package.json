@@ -21,7 +21,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",
     "@commitlint/config-conventional": "^17.4.3",
-    "@dagger.io/dagger": "^0.3.5",
+    "@dagger.io/dagger": "^0.4.0",
     "@faker-js/faker": "^7.6.0",
     "@kubernetes/client-node": "^0.18.1",
     "@types/bcrypt": "^5.0.0",
