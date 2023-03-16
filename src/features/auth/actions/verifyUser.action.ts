@@ -23,7 +23,7 @@ const responseSchema = createResponseSchema(
 )
 
 export default async function (fastify: FastifyInstance) {
-  fastify.withTypeProvider<TypeBoxTypeProvider>().post(
+  fastify.withTypeProvider<TypeBoxTypeProvider>().put(
     '/verify',
     {
       schema: {
@@ -66,7 +66,12 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
-      const ircClient = new IRCClient(request.ip, this.log)
+      const userIp =
+        process.env.NODE_ENV === 'production'
+          ? request.ips?.at(-1) ?? request.ip
+          : request.ip
+
+      const ircClient = new IRCClient(userIp, this.log)
       await ircClient.verify({ username: user.nick, code })
 
       const updatedUser = (
