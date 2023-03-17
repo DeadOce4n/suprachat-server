@@ -66,6 +66,9 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
+      this.log.debug(`Last forwarded IP: ${request.ips?.at(-1)}`)
+      this.log.debug(`Request IP: ${request.ip}`)
+
       const userIp =
         process.env.NODE_ENV === 'production'
           ? request.ips?.at(-1) ?? request.ip
