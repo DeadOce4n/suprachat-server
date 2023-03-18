@@ -40,6 +40,7 @@ connect(
       .withMountedCache('/home/node/.pnpm-store', nodeCache)
       .withEnvVariable('SECRET_KEY', 'sacarrácatelas')
       .withExec(['corepack', 'enable'])
+      .withExec(['corepack', 'prepare', 'pnpm@latest-7', '--activate'])
       .withExec([
         'pnpm',
         'config',
@@ -50,8 +51,8 @@ connect(
       .withExec(['chown', '-R', 'node:node', '/home/node/.pnpm-store'])
       .withExec(['chown', '-R', 'node:node', '/home/node/app'])
       .withWorkdir('/home/node/app')
-      .withExec(['apt-get', 'update'])
-      .withExec(['apt-get', 'install', '-y', 'curl'])
+      .withExec(['apt-get', '-qq', 'update'])
+      .withExec(['apt-get', '-qq', 'install', '-y', 'curl'])
       .withExec(['pnpm', 'install', '--frozen-lockfile'])
 
     await test.withExec(['pnpm', 'lint']).exitCode()
@@ -63,13 +64,28 @@ connect(
     if (process.env.CI_PIPELINE_SOURCE !== 'merge_request_event') {
       console.log('Building and uploading image...')
 
-      const build = test
-        .withoutMount('/home/node/app')
+      const build = client
+        .container()
+        .from('node:18-slim')
         .withDirectory('/home/node/app', client.host().directory('.'), {
           include,
           exclude: ['node_modules/']
         })
         .withMountedCache('/home/node/.pnpm-store', nodeCache)
+        .withExec(['corepack', 'enable'])
+        .withExec(['corepack', 'prepare', 'pnpm@latest-7', '--activate'])
+        .withExec([
+          'pnpm',
+          'config',
+          'set',
+          'store-dir',
+          '/home/node/.pnpm-store'
+        ])
+        .withExec(['chown', '-R', 'node:node', '/home/node/.pnpm-store'])
+        .withExec(['chown', '-R', 'node:node', '/home/node/app'])
+        .withWorkdir('/home/node/app')
+        .withExec(['apt-get', '-qq', 'update'])
+        .withExec(['apt-get', '-qq', 'install', '-y', 'curl'])
         .withExec(['pnpm', 'prune', '--prod'])
         .withEntrypoint(['pnpm', 'start'])
 

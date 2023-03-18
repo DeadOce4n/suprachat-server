@@ -20,7 +20,7 @@
 build-deploy:
   extends: [.dagger]
   script:
-    - pnpm install --frozen-lockfile
+    - pnpm install -D --frozen-lockfile
     - pnpm ci:run
   cache:
     key:
