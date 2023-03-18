@@ -5,6 +5,10 @@ import dotenv from 'dotenv'
 import fs from 'fs/promises'
 import path from 'path'
 import YAML from 'yaml'
+import { exec as cbExec } from 'child_process'
+import { promisify } from 'util'
+
+const exec = promisify(cbExec)
 
 try {
   const envPath = path.resolve('./.dagger/.env')
@@ -24,12 +28,15 @@ const include = [
   'tsconfig.json'
 ]
 
+const exclude = ['node_modules/', '.pnpm-store/']
+const storePath = (await exec('pnpm store path')).stdout.trim()
+
 connect(
   async (client) => {
     const nodeCache = client.cacheVolume('node')
     const source = client.host().directory('.', {
       include,
-      exclude: ['node_modules/']
+      exclude
     })
 
     // Stage 1: Lint, format, typecheck, test
@@ -37,6 +44,10 @@ connect(
       .container()
       .from('node:18-slim')
       .withMountedDirectory('/home/node/app', source)
+      .withDirectory(
+        '/home/node/.pnpm-store',
+        client.host().directory(storePath)
+      )
       .withMountedCache('/home/node/.pnpm-store', nodeCache)
       .withEnvVariable('SECRET_KEY', 'sacarrácatelas')
       .withExec(['corepack', 'enable'])
@@ -55,10 +66,12 @@ connect(
       .withExec(['apt-get', '-qq', 'install', '-y', 'curl'])
       .withExec(['pnpm', 'install', '--frozen-lockfile'])
 
-    await test.withExec(['pnpm', 'lint']).exitCode()
-    await test.withExec(['pnpm', 'format']).exitCode()
-    await test.withExec(['pnpm', 'type-check']).exitCode()
-    await test.withExec(['pnpm', 'coverage']).exitCode()
+    await Promise.all([
+      test.withExec(['pnpm', 'lint']).exitCode(),
+      test.withExec(['pnpm', 'format']).exitCode(),
+      test.withExec(['pnpm', 'type-check']).exitCode(),
+      test.withExec(['pnpm', 'coverage']).exitCode()
+    ])
 
     // Stage 2: Build image
     if (process.env.CI_PIPELINE_SOURCE !== 'merge_request_event') {
@@ -69,8 +82,12 @@ connect(
         .from('node:18-slim')
         .withDirectory('/home/node/app', client.host().directory('.'), {
           include,
-          exclude: ['node_modules/']
+          exclude
         })
+        .withDirectory(
+          '/home/node/.pnpm-store',
+          client.host().directory(storePath)
+        )
         .withMountedCache('/home/node/.pnpm-store', nodeCache)
         .withExec(['corepack', 'enable'])
         .withExec(['corepack', 'prepare', 'pnpm@latest-7', '--activate'])
@@ -139,8 +156,8 @@ connect(
       } catch (e) {
         console.log("Deployment doesn't exist, creating it..")
         await k8sClient.create(deployment)
-        console.log('Successfully deployed new image!')
       }
+      console.log('Successfully deployed new image!')
     }
   },
   { LogOutput: process.stdout }
