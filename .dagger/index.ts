@@ -5,10 +5,6 @@ import dotenv from 'dotenv'
 import fs from 'fs/promises'
 import path from 'path'
 import YAML from 'yaml'
-import { exec as cbExec } from 'child_process'
-import { promisify } from 'util'
-
-const exec = promisify(cbExec)
 
 try {
   const envPath = path.resolve('./.dagger/.env')
@@ -29,7 +25,6 @@ const include = [
 ]
 
 const exclude = ['node_modules/', '.pnpm-store/']
-const storePath = (await exec('pnpm store path')).stdout.trim()
 
 connect(
   async (client) => {
@@ -44,10 +39,6 @@ connect(
       .container()
       .from('node:18-slim')
       .withMountedDirectory('/home/node/app', source)
-      .withDirectory(
-        '/home/node/.pnpm-store',
-        client.host().directory(storePath)
-      )
       .withMountedCache('/home/node/.pnpm-store', nodeCache)
       .withEnvVariable('SECRET_KEY', 'sacarrácatelas')
       .withExec(['corepack', 'enable'])
@@ -84,10 +75,6 @@ connect(
           include,
           exclude
         })
-        .withDirectory(
-          '/home/node/.pnpm-store',
-          client.host().directory(storePath)
-        )
         .withMountedCache('/home/node/.pnpm-store', nodeCache)
         .withExec(['corepack', 'enable'])
         .withExec(['corepack', 'prepare', 'pnpm@latest-7', '--activate'])

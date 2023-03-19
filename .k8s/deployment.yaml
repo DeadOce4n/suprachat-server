@@ -64,6 +64,7 @@ spec:
   tls:
     - hosts:
       - beta-api.suprachat.net
+      secretName: sc-backend-cert
   rules:
     - host: beta-api.suprachat.net
       http:
@@ -75,3 +76,19 @@ spec:
                 name: suprachat-backend
                 port:
                   name: web
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-staging
+  namespace: suprachat
+spec:
+  acme:
+    email: ivan.97galarz@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: sc-backend-cert
+    solvers:
+      - http01:
+          ingress:
+            class: traefik
