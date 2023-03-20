@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: suprachat-backend
-          image: <IMAGE>
+          image: ttl.sh/suprachat-backend-8372b766-ba42-4836-ada6-51764f21330c:2h@sha256:f9396ab72c099aa0acd33ef0a5e5ac9e504d1abb64ac1cce90adc96c9b786179
           ports:
             - name: web
               containerPort: 3001
