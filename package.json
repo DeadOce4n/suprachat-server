@@ -32,7 +32,6 @@
     "eslint": "^8.38.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
-    "mongodb": "^4.15.0",
     "mongodb-memory-server": "^8.12.2",
     "pino-pretty": "^9.4.0",
     "prettier": "^2.8.7",
@@ -55,6 +54,7 @@
     "dotenv": "^16.0.3",
     "fastify": "^4.15.0",
     "irctokens": "^2.0.0",
+    "mongodb": "^4.15.0",
     "nanoid": "^4.0.2",
     "remeda": "^1.12.0",
     "tsx": "^3.12.6"
