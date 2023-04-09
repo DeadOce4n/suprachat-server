@@ -33,12 +33,10 @@ export default async function (fastify: FastifyInstance) {
       if (!collection) {
         return reply.code(500).send({
           success: false,
-          errors: [
-            {
-              name: 'databaseUnavailable',
-              message: 'Database connection error'
-            }
-          ]
+          error: {
+            name: 'databaseUnavailable',
+            message: 'Database connection error'
+          }
         })
       }
       const { limit = 25, offset = 0, filter } = request.query
@@ -54,6 +52,7 @@ export default async function (fastify: FastifyInstance) {
       return reply.code(200).send({
         success: true,
         message: 'Users fetched successfully',
+        messageKey: 'successUsersFetch',
         data: users.map((user) => ({
           ...user,
           _id: user._id.toString(),

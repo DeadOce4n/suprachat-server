@@ -21,9 +21,22 @@ const paramsSchema = Type.Object(
 )
 
 const bodySchema = Type.Partial(
-  Type.Omit(userSchema, ['password', 'active', 'registered_date'], {
-    additionalProperties: false
-  }),
+  Type.Intersect([
+    Type.Omit(
+      userSchema,
+      ['password', 'active', 'registered_date', 'role', 'verified'],
+      {
+        additionalProperties: false
+      }
+    ),
+    Type.Object(
+      {
+        role: Type.Enum(Roles),
+        verified: Type.Boolean()
+      },
+      { additionalProperties: false }
+    )
+  ]),
   { additionalProperties: false }
 )
 
@@ -50,12 +63,10 @@ export default async function (fastify: FastifyInstance) {
       if (!users) {
         return reply.code(500).send({
           success: false,
-          errors: [
-            {
-              name: 'databaseUnavailable',
-              message: 'Database connection error'
-            }
-          ]
+          error: {
+            name: 'databaseUnavailable',
+            message: 'Database connection error'
+          }
         })
       }
 
@@ -65,12 +76,10 @@ export default async function (fastify: FastifyInstance) {
       if (!user) {
         return reply.code(404).send({
           success: false,
-          errors: [
-            {
-              name: 'userNotFound',
-              message: `User with _id ${userId} not found`
-            }
-          ]
+          error: {
+            name: 'userNotFound',
+            message: `User with _id ${userId} not found`
+          }
         })
       }
 
@@ -84,12 +93,10 @@ export default async function (fastify: FastifyInstance) {
       ) {
         return reply.code(409).send({
           success: false,
-          errors: [
-            {
-              name: 'notEnoughPrivileges',
-              message: "You must be an admin to modify another user's data"
-            }
-          ]
+          error: {
+            name: 'notEnoughPrivileges',
+            message: "You must be an admin to modify another user's data"
+          }
         })
       }
 
@@ -110,7 +117,8 @@ export default async function (fastify: FastifyInstance) {
           _id: userId.toString(),
           registered_date: user.registered_date.toISOString()
         },
-        message: 'User modified successfully'
+        message: 'User modified successfully',
+        messageKey: 'successUserUpdate'
       })
     }
   )

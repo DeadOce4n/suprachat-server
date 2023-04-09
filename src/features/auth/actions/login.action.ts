@@ -35,7 +35,8 @@ export default async function (fastify: FastifyInstance) {
         response: {
           200: responseSchema,
           400: errorSchema,
-          404: errorSchema
+          404: errorSchema,
+          409: errorSchema
         }
       }
     },
@@ -43,24 +44,20 @@ export default async function (fastify: FastifyInstance) {
       if (!request.headers.authorization) {
         return reply.code(400).send({
           success: false,
-          errors: [
-            {
-              name: 'missingAuthorizationHeader',
-              message: 'Authorization header is missing'
-            }
-          ]
+          error: {
+            name: 'missingAuthorizationHeader',
+            message: 'Authorization header is missing'
+          }
         })
       }
       const [, headerToken] = request.headers.authorization.split(' ')
       if (!headerToken) {
         return reply.code(400).send({
           success: false,
-          errors: [
-            {
-              name: 'malformedAuthorization',
-              message: 'Authorization header is malformed'
-            }
-          ]
+          error: {
+            name: 'malformedAuthorization',
+            message: 'Authorization header is malformed'
+          }
         })
       }
       const auth = Buffer.from(headerToken, 'base64').toString('utf8')
@@ -69,12 +66,10 @@ export default async function (fastify: FastifyInstance) {
       if (!username || !password) {
         return reply.code(400).send({
           success: false,
-          errors: [
-            {
-              name: 'malformedAuthorization',
-              message: 'Authorization header is malformed'
-            }
-          ]
+          error: {
+            name: 'malformedAuthorization',
+            message: 'Authorization header is malformed'
+          }
         })
       }
 
@@ -83,12 +78,10 @@ export default async function (fastify: FastifyInstance) {
       if (!collection) {
         return reply.code(500).send({
           success: false,
-          errors: [
-            {
-              name: 'databaseUnavailable',
-              message: 'Database connection error'
-            }
-          ]
+          error: {
+            name: 'databaseUnavailable',
+            message: 'Database connection error'
+          }
         })
       }
 
@@ -99,7 +92,7 @@ export default async function (fastify: FastifyInstance) {
       if (!user) {
         return reply.code(404).send({
           success: false,
-          errors: [{ name: 'userNotFound', message: 'User not found' }]
+          error: { name: 'userNotFound', message: 'User not found' }
         })
       }
 
@@ -115,11 +108,12 @@ export default async function (fastify: FastifyInstance) {
       }
 
       if (!(await checkPasswdHashFunc(user.password, password))) {
-        return reply.code(404).send({
+        return reply.code(409).send({
           success: false,
-          errors: [
-            { name: 'wrongPassword', message: 'Provided password is incorrect' }
-          ]
+          error: {
+            name: 'wrongPassword',
+            message: 'Provided password is incorrect'
+          }
         })
       }
 
@@ -154,7 +148,8 @@ export default async function (fastify: FastifyInstance) {
         data: {
           token
         },
-        message: 'User logged in successfully'
+        message: 'User logged in successfully',
+        messageKey: 'loginSuccessful'
       })
     }
   )

@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ergo
+  namespace: suprachat
+spec:
+  ipFamilyPolicy: PreferDualStack
+  ports:
+    - name: plain
+      port: 6667
+      targetPort: plain
+    - name: secure
+      port: 6697
+      targetPort: secure
+  clusterIP: None
+  selector:
+    app: ergo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ergo-0
+  namespace: suprachat
+spec:
+  ipFamilyPolicy: PreferDualStack
+  type: LoadBalancer
+  selector:
+    statefulset.kubernetes.io/pod-name: ergo-0
+  ports:
+    - protocol: TCP
+      name: secure
+      port: 6697
+      targetPort: 6697
+      nodePort: 31782
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ergo
+  namespace: suprachat
+spec:
+  selector:
+    matchLabels:
+      app: ergo
+  serviceName: ergo
+  replicas: 1
+  minReadySeconds: 0
+  template:
+    metadata:
+      labels:
+        app: ergo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: ergo
+          image: ghcr.io/ergochat/ergo:v2.11.1
+          ports:
+            - containerPort: 6667
+              name: plain
+            - containerPort: 6697
+              name: secure
+          volumeMounts:
+            - name: ergo-storage
+              mountPath: /ircd/db/
+            - name: sc-backend-cert
+              mountPath: /ircd/tls/
+              readOnly: true
+            - name: ergo-config
+              mountPath: /ircd/
+            - name: dkim
+              mountPath: /ircd/dkim/
+              readOnly: true
+            - name: lang
+              mountPath: /ircd/lang/
+              readOnly: true
+      volumes:
+        - name: ergo-config
+          configMap:
+            name: ergo-config
+        - name: ergo-storage
+          persistentVolumeClaim:
+            claimName: ergo-storage
+        - name: sc-backend-cert
+          secret:
+            secretName: sc-backend-cert
+        - name: dkim
+          secret:
+            secretName: ergo-dkim
+        - name: lang
+          configMap:
+            name: ergo-lang
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ergo-storage
+  namespace: suprachat
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi

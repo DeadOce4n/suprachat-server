@@ -35,12 +35,10 @@ export default async function (fastify: FastifyInstance) {
       if (!users) {
         return reply.code(500).send({
           success: false,
-          errors: [
-            {
-              name: 'databaseUnavailable',
-              message: 'Database connection error'
-            }
-          ]
+          error: {
+            name: 'databaseUnavailable',
+            message: 'Database connection error'
+          }
         })
       }
 
@@ -50,25 +48,24 @@ export default async function (fastify: FastifyInstance) {
       if (!user) {
         return reply.code(404).send({
           success: false,
-          errors: [
-            {
-              name: 'userNotFound',
-              message: `User with _id ${userId} not found`
-            }
-          ]
+          error: {
+            name: 'userNotFound',
+            message: `User with _id ${userId} not found`
+          }
         })
       }
 
       const data = {
         ...user,
         _id: userId.toString(),
-        registered_date: user.registered_date.toString()
+        registered_date: user.registered_date.toISOString()
       }
 
       return reply.code(200).send({
         success: true,
         data,
-        message: 'User fetched successfully'
+        message: 'User fetched successfully',
+        messageKey: 'successUserFetch'
       })
     }
   )

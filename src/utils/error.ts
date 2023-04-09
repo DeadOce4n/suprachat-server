@@ -24,22 +24,21 @@ export default function getErrorHandler(): Parameters<
     reply
   ) {
     this.log.error(error)
+    const response = {
+      success: false,
+      error: {
+        name: error.name,
+        message: error.message
+      },
+      ...(('validation' in error &&
+        error.validation.map((v) => ({
+          name: v.keyword,
+          message: v.message
+        }))) ||
+        [])
+    }
     return reply
       .status('statusCode' in error ? error.statusCode ?? 500 : 500)
-      .send({
-        success: false,
-        errors: [
-          {
-            name: error.name,
-            message: error.message
-          },
-          ...(('validation' in error &&
-            error.validation.map((v) => ({
-              name: v.keyword,
-              message: v.message
-            }))) ||
-            [])
-        ]
-      })
+      .send(response)
   }
 }

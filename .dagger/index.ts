@@ -42,7 +42,7 @@ connect(
       .withMountedCache('/home/node/.pnpm-store', nodeCache)
       .withEnvVariable('SECRET_KEY', 'sacarrácatelas')
       .withExec(['corepack', 'enable'])
-      .withExec(['corepack', 'prepare', 'pnpm@latest-7', '--activate'])
+      .withExec(['corepack', 'prepare', 'pnpm@latest-8', '--activate'])
       .withExec([
         'pnpm',
         'config',
@@ -77,7 +77,7 @@ connect(
         })
         .withMountedCache('/home/node/.pnpm-store', nodeCache)
         .withExec(['corepack', 'enable'])
-        .withExec(['corepack', 'prepare', 'pnpm@latest-7', '--activate'])
+        .withExec(['corepack', 'prepare', 'pnpm@latest-8', '--activate'])
         .withExec([
           'pnpm',
           'config',

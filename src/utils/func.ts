@@ -12,6 +12,7 @@ export const createResponseSchema = <TData extends TSchema>(
     {
       success: Type.Literal(true),
       message: Type.String(),
+      messageKey: Type.String(),
       data: dataSchema,
       meta: Type.Optional(
         Type.Object({
