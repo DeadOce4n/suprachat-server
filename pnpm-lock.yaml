@@ -37,6 +37,9 @@ dependencies:
   irctokens:
     specifier: ^2.0.0
     version: 2.0.0
+  mongodb:
+    specifier: ^4.15.0
+    version: 4.15.0
   nanoid:
     specifier: ^4.0.2
     version: 4.0.2
@@ -87,9 +90,6 @@ devDependencies:
   lint-staged:
     specifier: ^13.2.1
     version: 13.2.1
-  mongodb:
-    specifier: ^4.15.0
-    version: 4.15.0
   mongodb-memory-server:
     specifier: ^8.12.2
     version: 8.12.2
