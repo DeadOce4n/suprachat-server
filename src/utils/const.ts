@@ -9,6 +9,8 @@ export const PORT = Number(process.env.PORT)
 export const SECRET_KEY = process.env.SECRET_KEY
 export const LOG_LEVEL = process.env.LOG_LEVEL
 export const CORS_ORIGINS = (process.env.CORS_ORIGINS ?? '').split(',')
+export const { S3_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_BUCKET_NAME } =
+  process.env
 
 export const FORBIDDEN_CHARS = ' ,*?.!:<>\'";#~&@%+-'.split('')
 
@@ -216,3 +218,5 @@ export enum Roles {
   Normal = 'normal',
   Admin = 'admin'
 }
+
+export const PROFILE_PIC_MAX_SIZE = 100_000

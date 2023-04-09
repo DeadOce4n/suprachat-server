@@ -44,12 +44,10 @@ export default async function (fastify: FastifyInstance) {
       if (!users) {
         return reply.code(500).send({
           success: false,
-          errors: [
-            {
-              name: 'databaseUnavailable',
-              message: 'Database connection error'
-            }
-          ]
+          error: {
+            name: 'databaseUnavailable',
+            message: 'Database connection error'
+          }
         })
       }
 
@@ -58,14 +56,12 @@ export default async function (fastify: FastifyInstance) {
       if (user) {
         return reply.code(409).send({
           success: false,
-          errors: [
-            {
-              name: 'duplicateNick',
-              message: `${
-                user.nick === nick ? `Nick ${nick}` : `Email ${email}`
-              } is already in use`
-            }
-          ]
+          error: {
+            name: 'duplicateNick',
+            message: `${
+              user.nick === nick ? `Nick ${nick}` : `Email ${email}`
+            } is already in use`
+          }
         })
       }
 
@@ -73,14 +69,12 @@ export default async function (fastify: FastifyInstance) {
       if (hasForbiddenChars) {
         return reply.code(400).send({
           success: false,
-          errors: [
-            {
-              name: 'invalidNick',
-              message: `Nick contains forbidden characters: ${forbiddenChars.join(
-                ', '
-              )}`
-            }
-          ]
+          error: {
+            name: 'invalidNick',
+            message: `Nick contains forbidden characters: ${forbiddenChars.join(
+              ', '
+            )}`
+          }
         })
       }
 
@@ -114,7 +108,8 @@ export default async function (fastify: FastifyInstance) {
           _id: insertedId.toString(),
           registered_date: newUser.registered_date.toISOString()
         },
-        message: 'User registered successfully'
+        message: 'User registered successfully',
+        messageKey: 'registrationSuccesful'
       })
     }
   )

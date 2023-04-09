@@ -9,6 +9,7 @@ metadata:
   name: suprachat-backend
   namespace: suprachat
 spec:
+  ipFamilyPolicy: PreferDualStack
   ports:
     - name: web
       port: 80
@@ -59,7 +60,7 @@ metadata:
   name: suprachat-backend
   namespace: suprachat
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   tls:
     - hosts:
@@ -78,16 +79,16 @@ spec:
                   name: web
 ---
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
-  name: letsencrypt-staging
+  name: letsencrypt
   namespace: suprachat
 spec:
   acme:
     email: ivan.97galarz@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: sc-backend-cert
+      name: letsencrypt-account-key
     solvers:
       - http01:
           ingress:

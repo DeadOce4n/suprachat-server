@@ -28,7 +28,7 @@
     "outDir": "dist/",
     "baseUrl": "src/",
     "paths": {
-      "~/*": ["/*"],
+      "~/*": ["*"],
       "@common/*": ["common/*"],
       "@features/*": ["features/*"],
       "@utils/*": ["utils/*"],

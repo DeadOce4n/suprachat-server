@@ -34,12 +34,10 @@ export default async function (fastify: FastifyInstance) {
       if (!users) {
         return reply.code(500).send({
           success: false,
-          errors: [
-            {
-              name: 'databaseUnavailable',
-              message: 'Database connection error'
-            }
-          ]
+          error: {
+            name: 'databaseUnavailable',
+            message: 'Database connection error'
+          }
         })
       }
 
@@ -49,12 +47,10 @@ export default async function (fastify: FastifyInstance) {
       if (!user) {
         return reply.code(404).send({
           success: false,
-          errors: [
-            {
-              name: 'userNotFound',
-              message: `User with _id ${userId} not found`
-            }
-          ]
+          error: {
+            name: 'userNotFound',
+            message: `User with _id ${userId} not found`
+          }
         })
       }
 
@@ -65,12 +61,10 @@ export default async function (fastify: FastifyInstance) {
       if (decodedToken.role !== Roles.Admin) {
         return reply.code(409).send({
           success: false,
-          errors: [
-            {
-              name: 'notEnoughPrivileges',
-              message: 'You must be an admin to delete an user'
-            }
-          ]
+          error: {
+            name: 'notEnoughPrivileges',
+            message: 'You must be an admin to delete an user'
+          }
         })
       }
 
@@ -87,7 +81,8 @@ export default async function (fastify: FastifyInstance) {
       return reply.code(200).send({
         success: true,
         data: null,
-        message: 'User deleted successfully'
+        message: 'User deleted successfully',
+        messageKey: 'successDeleteUser'
       })
     }
   )

@@ -1,4 +1,4 @@
-import fastify from 'fastify'
+import fastify, { type FastifyServerOptions } from 'fastify'
 import jwt from '@fastify/jwt'
 import cors from '@fastify/cors'
 
@@ -23,7 +23,7 @@ const envToLogger = {
   test: false
 } as const
 
-const defaultOpts: Parameters<typeof fastify>[0] = {
+const defaultOpts: FastifyServerOptions = {
   logger: envToLogger[process.env.NODE_ENV] ?? true,
   trustProxy: process.env.NODE_ENV === 'production'
 }

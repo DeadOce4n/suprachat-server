@@ -3,13 +3,22 @@ import { type Static, Type } from '@sinclair/typebox'
 export const errorSchema = Type.Object(
   {
     success: Type.Literal(false),
-    errors: Type.Array(
-      Type.Object(
-        {
-          name: Type.String(),
-          message: Type.String()
-        },
-        { additionalProperties: false }
+    error: Type.Object(
+      {
+        name: Type.String(),
+        message: Type.String()
+      },
+      { additionalProperties: false }
+    ),
+    additionalErrors: Type.Optional(
+      Type.Array(
+        Type.Object(
+          {
+            name: Type.String(),
+            message: Type.String()
+          },
+          { additionalProperties: false }
+        )
       )
     )
   },
