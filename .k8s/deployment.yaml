@@ -53,6 +53,16 @@ spec:
                 secretKeyRef:
                   name: sc-backend
                   key: WEBIRC_PASS
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sc-backend
+                  key: S3_ACCESS_KEY
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sc-backend
+                  key: S3_SECRET_KEY
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -61,6 +71,7 @@ metadata:
   namespace: suprachat
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: suprachat-suprachat-backend-cors@kubernetescrd
 spec:
   tls:
     - hosts:
@@ -93,3 +104,25 @@ spec:
       - http01:
           ingress:
             class: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  namespace: suprachat
+  name: suprachat-backend-cors
+spec:
+  headers:
+    accessControlAllowMethods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+      - "PUT"
+      - "PATCH"
+    accessControlAllowOriginList:
+      - "https://beta.suprachat.net"
+      - "https://suprachat.net"
+    accessControlMaxAge: 100
+    addVaryHeader: true
+    accessControlAllowHeaders:
+      - "Authorization"
+      - "Content-Type"
