@@ -11,7 +11,11 @@ import {
   type UserSchema
 } from '../entities/user.model.js'
 import { ObjectIdString, Roles } from '@utils/const.js'
-import { createResponseSchema } from '@utils/func.js'
+import {
+  createResponseSchema,
+  generatePasswordHash,
+  checkPasswordHash
+} from '@utils/func.js'
 
 const paramsSchema = Type.Object(
   {
@@ -22,13 +26,9 @@ const paramsSchema = Type.Object(
 
 const bodySchema = Type.Partial(
   Type.Intersect([
-    Type.Omit(
-      userSchema,
-      ['password', 'active', 'registered_date', 'role', 'verified'],
-      {
-        additionalProperties: false
-      }
-    ),
+    Type.Omit(userSchema, ['active', 'registered_date', 'role', 'verified'], {
+      additionalProperties: false
+    }),
     Type.Object(
       {
         role: Type.Enum(Roles),
@@ -100,11 +100,30 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
+      const updatePayload = {
+        ...request.body
+      }
+
+      if (request.body.password) {
+        if (await checkPasswordHash(user.password, request.body.password)) {
+          return reply.code(409).send({
+            success: false,
+            error: {
+              name: 'newPasswordSameAsOld',
+              message: 'New password cannot be the same as the old one'
+            }
+          })
+        }
+        updatePayload.password = await generatePasswordHash(
+          request.body.password
+        )
+      }
+
       const updatedUser = (
         await users.findOneAndUpdate(
           { _id: userId },
           {
-            $set: request.body
+            $set: updatePayload
           },
           { returnDocument: 'after' }
         )
