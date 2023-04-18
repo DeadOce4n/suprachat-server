@@ -163,6 +163,27 @@ export default class IRCClient {
     })
   }
 
+  // TODO: remove this method after figuring out how to get the remote IP from k8s
+  public checkRemoteIP({ username }: CheckRemoteIPParams) {
+    return new Promise<void>((resolve, reject) => {
+      this.connect(username)
+      this.socket.on('error', (error) => {
+        this.disconnect()
+        reject(error)
+      })
+      this.socket.on('data', (data) => {
+        const lines = this.decoder.push(Uint8Array.from(data))
+        if (lines) {
+          lines.forEach((line) => {
+            this.logger.debug(`IRCd Incoming Msg: ${line.format()}`)
+            this.disconnect()
+            resolve()
+          })
+        }
+      })
+    })
+  }
+
   public static verifyNick(
     nick: string
   ): [hasForbiddenChars: boolean, forbiddenChars: string[]] {
@@ -171,4 +192,9 @@ export default class IRCClient {
       .filter((char) => FORBIDDEN_CHARS.includes(char))
     return [forbiddenChars.length > 0, forbiddenChars]
   }
+}
+
+type CheckRemoteIPParams = {
+  username: string
+  password?: string
 }
