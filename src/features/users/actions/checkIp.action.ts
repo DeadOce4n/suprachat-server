@@ -27,6 +27,9 @@ export default async function (fastify: FastifyInstance) {
     async function (request, reply) {
       this.log.debug(`request.ip ${request.ip}`)
       this.log.debug(`request.ips ${request.ips?.join(', ')}`)
+      this.log.debug(
+        `request.headers\n${JSON.stringify(request.headers, null, 4)}`
+      )
       return reply.code(200).send({
         success: true,
         data: null,
