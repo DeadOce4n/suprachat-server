@@ -112,7 +112,7 @@ export default async function (fastify: FastifyInstance) {
           registered_date: newUser.registered_date.toISOString()
         },
         message: 'User registered successfully',
-        messageKey: 'registrationSuccesful'
+        messageKey: 'registrationSuccessful'
       })
     }
   )
