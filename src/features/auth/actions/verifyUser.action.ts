@@ -4,7 +4,7 @@ import type { FastifyInstance } from 'fastify'
 import { ObjectId } from '@fastify/mongodb'
 import type { WithId } from 'mongodb'
 
-import { errorSchema } from '@common/schemas.js'
+import { errorSchema, defaultHeadersSchema } from '@common/schemas.js'
 import { userWithOidSchema, type User } from '@features/users/module.js'
 import IRCClient from '@services/irc.service.js'
 import { ObjectIdString } from '@utils/const.js'
@@ -33,7 +33,8 @@ export default async function (fastify: FastifyInstance) {
           404: errorSchema,
           500: errorSchema
         },
-        body: verifyUserSchema
+        body: verifyUserSchema,
+        headers: defaultHeadersSchema
       }
     },
     async function (request, reply) {
@@ -64,7 +65,9 @@ export default async function (fastify: FastifyInstance) {
 
       const userIp =
         process.env.NODE_ENV === 'production'
-          ? request.ips?.at(-1) ?? request.ip
+          ? request.headers['cf-connecting-ip'] ??
+            request.ips?.at(-1) ??
+            request.ip
           : request.ip
 
       const ircClient = new IRCClient(userIp, this.log)

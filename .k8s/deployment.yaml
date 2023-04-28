@@ -9,6 +9,7 @@ metadata:
   name: suprachat-backend
   namespace: suprachat
 spec:
+  type: LoadBalancer
   ipFamilyPolicy: PreferDualStack
   ports:
     - name: web
@@ -16,6 +17,7 @@ spec:
       targetPort: web
   selector:
     app: suprachat-backend
+  externalTrafficPolicy: Local
 ---
 apiVersion: apps/v1
 kind: Deployment

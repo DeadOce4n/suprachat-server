@@ -33,3 +33,12 @@ export const oidSchema = Type.Object(
   },
   { additionalProperties: false }
 )
+
+export const defaultHeadersSchema = Type.Object({
+  'cf-connecting-ip': Type.Optional(
+    Type.Union([
+      Type.String({ format: 'ipv4' }),
+      Type.String({ format: 'ipv6' })
+    ])
+  )
+})

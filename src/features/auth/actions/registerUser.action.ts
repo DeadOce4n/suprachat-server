@@ -3,7 +3,7 @@ import { Type } from '@sinclair/typebox'
 import dayjs from 'dayjs'
 import type { FastifyInstance } from 'fastify'
 
-import { errorSchema } from '@common/schemas.js'
+import { errorSchema, defaultHeadersSchema } from '@common/schemas.js'
 import {
   userSchema,
   userWithOidSchema,
@@ -33,7 +33,8 @@ export default async function (fastify: FastifyInstance) {
           200: responseSchema,
           409: errorSchema,
           500: errorSchema
-        }
+        },
+        headers: defaultHeadersSchema
       }
     },
     async function (request, reply) {
@@ -80,7 +81,9 @@ export default async function (fastify: FastifyInstance) {
 
       const userIp =
         process.env.NODE_ENV === 'production'
-          ? request.ips?.at(-1) ?? request.ip
+          ? request.headers['cf-connecting-ip'] ??
+            request.ips?.at(-1) ??
+            request.ip
           : request.ip
 
       const ircClient = new IRCClient(userIp, this.log)
