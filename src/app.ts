@@ -1,53 +1,16 @@
-import fastify, { type FastifyServerOptions } from 'fastify'
-import jwt from '@fastify/jwt'
 import cors from '@fastify/cors'
+import jwt from '@fastify/jwt'
+import fastify from 'fastify'
 
 import * as features from '@features/features.js'
+import { CORS_ORIGINS } from '@utils/const.js'
 import getErrorHandler from '@utils/error.js'
-import { CORS_ORIGINS, LOG_LEVEL } from '@utils/const.js'
+import { loadEnv, getDefaultOpts } from './config.js'
 
-const envToLogger = {
-  development: {
-    level: 'debug',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        translateTime: 'HH:MM:ss Z',
-        ignore: 'pid,hostname'
-      }
-    }
-  },
-  production: {
-    level: LOG_LEVEL
-  },
-  test: false
-} as const
-
-const defaultOpts: FastifyServerOptions = {
-  logger: envToLogger[process.env.NODE_ENV] ?? true,
-  trustProxy: process.env.NODE_ENV === 'production'
-}
-
-const createApp = (opts: typeof defaultOpts = {}) => {
+const createApp = (opts: ReturnType<typeof getDefaultOpts> = {}) => {
+  const defaultOpts = getDefaultOpts()
   const app = fastify({ ...defaultOpts, ...opts })
-  if (process.env.NODE_ENV !== 'test') {
-    const envVarsNotFound = [
-      'MONGO_URI',
-      'DB_NAME',
-      'PORT',
-      'IRCD_HOST',
-      'IRCD_PORT',
-      'WEBIRC_PASS',
-      'SECRET_KEY',
-      'CORS_ORIGINS'
-    ].filter((env) => !process.env[env])
-    if (envVarsNotFound.length > 0) {
-      app.log.error(
-        `Missing environment variables: ${envVarsNotFound.join(', ')}`
-      )
-      process.emit('SIGTERM')
-    }
-  }
+  loadEnv(app)
   app.register(jwt, {
     secret: process.env.SECRET_KEY
   })
