@@ -65,6 +65,11 @@ spec:
                 secretKeyRef:
                   name: sc-backend
                   key: S3_SECRET_KEY
+            - name: VERCEL_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: sc-backend
+                  key: VERCEL_ACCESS_TOKEN
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
