@@ -11,6 +11,8 @@ export const LOG_LEVEL = process.env.LOG_LEVEL
 export const CORS_ORIGINS = (process.env.CORS_ORIGINS ?? '').split(',')
 export const { S3_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_BUCKET_NAME } =
   process.env
+export const { VERCEL_API_URL, VERCEL_ACCESS_TOKEN, VERCEL_PROJECT_ID } =
+  process.env
 
 export const FORBIDDEN_CHARS = ' ,*?.!:<>\'";#~&@%+-'.split('')
 
@@ -220,3 +222,7 @@ export enum Roles {
 }
 
 export const PROFILE_PIC_MAX_SIZE = 100_000
+
+export const VERCEL_ENV_KEYS: Record<string, string> = {
+  GATSBY_KIWI_URL: '6aH7glnqTjZKbrA8'
+}

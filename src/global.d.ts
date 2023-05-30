@@ -1,3 +1,4 @@
+import type * as undici from 'undici'
 import type { Filter } from 'mongodb'
 
 declare module 'fastify' {
@@ -23,6 +24,15 @@ declare global {
       S3_SECRET_KEY: string
       S3_REGION: string
       S3_BUCKET_NAME: string
+      VERCEL_API_URL: string
+      VERCEL_PROJECT_ID: string
+      VERCEL_ACCESS_TOKEN: string
     }
   }
+
+  // Re-export undici fetch function and various classes to global scope.
+  // These are classes and functions expected to be at global scope according to
+  // Node.js v18 API documentation.
+  // See: https://nodejs.org/dist/latest-v18.x/docs/api/globals.html
+  export const { FormData, Headers, Request, Response, fetch }: typeof undici
 }
