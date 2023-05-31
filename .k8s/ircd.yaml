@@ -1,68 +1,139 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ergo
-  namespace: suprachat
+  name: ergo-internal
+  labels:
+    app: ergo
 spec:
-  ipFamilyPolicy: PreferDualStack
+  type: ClusterIP
   ports:
-    - name: plain
-      port: 6667
-      targetPort: plain
     - name: secure
       port: 6697
-      targetPort: secure
-  clusterIP: None
+      targetPort: 6698
   selector:
     app: ergo
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ergo-0
-  namespace: suprachat
+  name: ergo-external
+  labels:
+    app: ergo
 spec:
-  ipFamilyPolicy: PreferDualStack
-  type: LoadBalancer
-  selector:
-    statefulset.kubernetes.io/pod-name: ergo-0
+  type: NodePort
+  externalTrafficPolicy: Local
   ports:
-    - protocol: TCP
-      name: secure
+    - name: secure
       port: 6697
-      targetPort: 6697
-      nodePort: 31782
+      targetPort: secure
+      nodePort: 6697
+    - name: websocket
+      port: 6699
+      targetPort: websocket
+      nodePort: 6699
+  selector:
+    app: ergo
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  namespace: suprachat
+  name: ssl-header
+spec:
+  headers:
+    customRequestHeaders:
+      Connection: keep-alive, Upgrade
+      Upgrade: websocket
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  namespace: suprachat
+  name: ergo-cors
+spec:
+  headers:
+    accessControlAllowMethods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+      - "PUT"
+      - "PATCH"
+    accessControlAllowOriginList:
+      - "https://beta.suprachat.net"
+      - "https://suprachat.net"
+      - "https://beta-chat.suprachat.net"
+      - "https://beta-irc.suprachat.net"
+    accessControlMaxAge: 100
+    addVaryHeader: true
+    accessControlAllowHeaders:
+      - "Accept"
+      - "Authorization"
+      - "Content-Type"
+      - "Connection"
+      - "Upgrade"
+      - "X-Forwarded-Proto"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ergo
+  namespace: suprachat
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: suprachat-ssl-header@kubernetescrd,suprachat-ergo-cors@kubernetescrd,suprachat-ergo-cors@kubernetescrd
+spec:
+  tls:
+    - hosts:
+      - beta-irc.suprachat.net
+      secretName: ergo-cert
+  rules:
+    - host: beta-irc.suprachat.net
+      http:
+        paths:
+          - path: /webirc
+            pathType: Prefix
+            backend:
+              service:
+                name: ergo
+                port:
+                  name: websocket
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: ergo
   namespace: suprachat
 spec:
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ergo
-  serviceName: ergo
-  replicas: 1
-  minReadySeconds: 0
   template:
     metadata:
       labels:
         app: ergo
     spec:
-      terminationGracePeriodSeconds: 10
+      shareProcessNamespace: true
       containers:
         - name: ergo
           image: ghcr.io/ergochat/ergo:v2.11.1
           ports:
-            - containerPort: 6667
-              name: plain
             - containerPort: 6697
               name: secure
+            - containerPort: 443
+              name: websocket
+          readinessProbe:
+            tcpSocket:
+              port: 6697
+          livenessProbe:
+            tcpSocket:
+              port: 6697
           volumeMounts:
             - name: ergo-storage
               mountPath: /ircd/db/
-            - name: sc-backend-cert
+            - name: ergo-cert
               mountPath: /ircd/tls/
               readOnly: true
             - name: ergo-config
@@ -80,9 +151,9 @@ spec:
         - name: ergo-storage
           persistentVolumeClaim:
             claimName: ergo-storage
-        - name: sc-backend-cert
+        - name: ergo-cert
           secret:
-            secretName: sc-backend-cert
+            secretName: ergo-cert
         - name: dkim
           secret:
             secretName: ergo-dkim
@@ -102,3 +173,16 @@ spec:
   resources:
     requests:
       storage: 2Gi
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  namespace: suprachat
+  name: beta-irc.suprachat.net
+spec:
+  secretName: ergo-cert
+  dnsNames:
+  - beta-irc.suprachat.net
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
