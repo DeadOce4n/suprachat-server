@@ -86,6 +86,8 @@ export default async function (fastify: FastifyInstance) {
             request.ip
           : request.ip
 
+      this.log.debug(`Connection received from IP ${userIp}`)
+
       const ircClient = new IRCClient(userIp, this.log)
 
       await ircClient.register({
