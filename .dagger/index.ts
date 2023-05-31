@@ -124,13 +124,16 @@ connect(
 
       const manifest = await fs.readFile(path.resolve('./.k8s/deployment.yaml'))
 
-      const specs = YAML.parseAllDocuments(
-        manifest.toString('utf8').replace('<IMAGE>', imageRef)
-      ).map((obj) => obj.toJS()) as k8s.KubernetesObject[]
+      const specs = YAML.parseAllDocuments(manifest.toString('utf8')).map(
+        (obj) => obj.toJS()
+      ) as k8s.KubernetesObject[]
 
       const deployment = specs.find(
         (spec) => spec.kind === 'Deployment'
       ) as k8s.KubernetesObject
+
+      deployment['spec']['template']['spec']['containers'][0]['image'] =
+        imageRef
 
       if (deployment.metadata?.annotations) {
         deployment.metadata.annotations[
