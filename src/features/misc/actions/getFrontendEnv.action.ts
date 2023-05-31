@@ -75,7 +75,7 @@ export default async function (fastify: FastifyInstance) {
         success: true,
         data: {
           env: {
-            GATSBY_KIWI_URL: data.value
+            [request.query.field]: data.value
           }
         },
         messageKey: 'envFetchSuccess',
