@@ -13,7 +13,8 @@ export function loadEnv(app: FastifyInstance) {
     'CORS_ORIGINS',
     'VERCEL_API_URL',
     'VERCEL_PROJECT_ID',
-    'VERCEL_ACCESS_TOKEN'
+    'VERCEL_ACCESS_TOKEN',
+    'PROFILE_PIC_MAX_SIZE'
   ]
 
   if (process.env.NODE_ENV !== 'test') {

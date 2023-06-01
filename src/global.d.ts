@@ -27,6 +27,7 @@ declare global {
       VERCEL_API_URL: string
       VERCEL_PROJECT_ID: string
       VERCEL_ACCESS_TOKEN: string
+      PROFILE_PIC_MAX_SIZE: string
     }
   }
 
