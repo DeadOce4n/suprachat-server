@@ -1,13 +1,15 @@
-import { ObjectId } from 'mongodb'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import fastifyMultipart from '@fastify/multipart'
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Static, Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
+import { ObjectId } from 'mongodb'
 import { nanoid } from 'nanoid/async'
+import sharp from 'sharp'
 
 import { errorSchema } from '@common/schemas.js'
 import {
+  ALLOWED_IMG_MIME_TYPES,
   ObjectIdString,
   PROFILE_PIC_MAX_SIZE,
   S3_BUCKET_NAME,
@@ -15,7 +17,7 @@ import {
 } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
 import s3Client from '~/loaders/s3.js'
-import type { userWithOidSchema, User } from '../entities/user.model.js'
+import type { User, userWithOidSchema } from '../entities/user.model.js'
 
 const paramsSchema = Type.Object({ _id: ObjectIdString })
 const responseSchema = createResponseSchema(
@@ -82,18 +84,38 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
-      try {
-        const data = await request.file()
-        if (!data) {
-          return reply.code(400).send({
-            success: false,
-            error: {
-              name: 'fileMissingInPayload',
-              message: 'File is missing from payload'
-            }
-          })
-        }
+      const data = await request.file()
 
+      if (!data) {
+        return reply.code(400).send({
+          success: false,
+          error: {
+            name: 'fileMissingInPayload',
+            message: 'File is missing from payload'
+          }
+        })
+      }
+
+      if (!ALLOWED_IMG_MIME_TYPES.includes(data.mimetype)) {
+        return reply.code(400).send({
+          success: false,
+          error: {
+            name: 'filetypeNotAllowed',
+            message: `Files of type ${data.mimetype} are not allowed`
+          }
+        })
+      }
+
+      const image = sharp(await data.toBuffer())
+
+      image.resize({
+        width: 500,
+        height: 500,
+        fit: 'contain',
+        background: (await image.stats()).dominant
+      })
+
+      try {
         const extension = data.filename.split('.').at(-1)
         const key = `${await nanoid()}${extension ? '.' + extension : ''}`
 
@@ -101,7 +123,7 @@ export default async function (fastify: FastifyInstance) {
           new PutObjectCommand({
             Bucket: S3_BUCKET_NAME,
             Key: key,
-            Body: await data.toBuffer()
+            Body: await image.toBuffer()
           })
         )
 

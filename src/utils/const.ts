@@ -226,3 +226,10 @@ export const PROFILE_PIC_MAX_SIZE = Number(process.env.PROFILE_PIC_MAX_SIZE)
 export const VERCEL_ENV_KEYS: Record<string, string> = {
   GATSBY_KIWI_URL: '6aH7glnqTjZKbrA8'
 }
+
+export const ALLOWED_IMG_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/bmp'
+]
