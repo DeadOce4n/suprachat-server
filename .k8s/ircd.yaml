@@ -6,10 +6,12 @@ metadata:
     app: ergo
 spec:
   type: ClusterIP
+  ipFamilyPolicy: RequireDualStack
+  ipFamilies: ["IPv6", "IPv4"]
   ports:
-    - name: secure
-      port: 6697
-      targetPort: 6698
+    - name: plain
+      port: 6667
+      targetPort: plain
   selector:
     app: ergo
 ---
@@ -22,6 +24,8 @@ metadata:
 spec:
   type: NodePort
   externalTrafficPolicy: Local
+  ipFamilyPolicy: RequireDualStack
+  ipFamilies: ["IPv6", "IPv4"]
   ports:
     - name: secure
       port: 6697
@@ -120,6 +124,8 @@ spec:
         - name: ergo
           image: ghcr.io/ergochat/ergo:v2.11.1
           ports:
+            - containerPort: 6667
+              name: plain
             - containerPort: 6697
               name: secure
             - containerPort: 443
