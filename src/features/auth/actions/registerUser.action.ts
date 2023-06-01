@@ -12,6 +12,7 @@ import {
 import IRCClient from '@services/irc.service.js'
 import { Roles } from '@utils/const.js'
 import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
+import { omit } from 'remeda'
 
 const bodySchema = Type.Omit(userSchema, [
   'registered_date',
@@ -20,7 +21,10 @@ const bodySchema = Type.Omit(userSchema, [
 ])
 
 const responseSchema = createResponseSchema(
-  Type.Omit(userWithOidSchema, ['password'])
+  Type.Intersect([
+    Type.Omit(userWithOidSchema, ['password']),
+    Type.Object({ token: Type.String() })
+  ])
 )
 
 export default async function (fastify: FastifyInstance) {
@@ -106,12 +110,20 @@ export default async function (fastify: FastifyInstance) {
 
       const { insertedId } = await users.insertOne(newUser)
 
+      const now = dayjs()
+      const expiration = now.clone().add(30, 'minutes')
+
+      const token = this.jwt.sign(omit(newUser, ['password']), {
+        expiresIn: expiration.diff(now).toString()
+      })
+
       return reply.code(200).send({
         success: true,
         data: {
           ...newUser,
           _id: insertedId.toString(),
-          registered_date: newUser.registered_date.toISOString()
+          registered_date: newUser.registered_date.toISOString(),
+          token
         },
         message: 'User registered successfully',
         messageKey: 'registrationSuccessful'
