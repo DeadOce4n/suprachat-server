@@ -43,7 +43,9 @@ export default async function (fastify: FastifyInstance) {
       }
 
       const userId = new fastify.mongo.ObjectId(request.params._id)
-      const user = await users.findOne({ _id: userId })
+      const user = await users.findOne({
+        $or: [{ _id: userId }, { nick: request.params._id }]
+      })
 
       if (!user) {
         return reply.code(404).send({
