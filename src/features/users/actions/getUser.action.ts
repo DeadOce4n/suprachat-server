@@ -5,11 +5,10 @@ import type { FastifyInstance } from 'fastify'
 import { errorSchema } from '@common/schemas.js'
 import { userWithOidSchema, type User } from '../entities/user.model.js'
 import { createResponseSchema } from '@utils/func.js'
-import { ObjectIdString } from '@utils/const.js'
 
 const paramsSchema = Type.Object(
   {
-    _id: ObjectIdString
+    _id: Type.String()
   },
   { additionalProperties: false }
 )
