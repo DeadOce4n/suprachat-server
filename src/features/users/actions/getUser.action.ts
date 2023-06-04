@@ -4,7 +4,7 @@ import type { FastifyInstance } from 'fastify'
 
 import { errorSchema } from '@common/schemas.js'
 import { userWithOidSchema, type User } from '../entities/user.model.js'
-import { createResponseSchema } from '@utils/func.js'
+import { createResponseSchema, isObjectIdString } from '@utils/func.js'
 
 const paramsSchema = Type.Object(
   {
@@ -41,24 +41,25 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
-      const userId = new fastify.mongo.ObjectId(request.params._id)
-      const user = await users.findOne({
-        $or: [{ _id: userId }, { nick: request.params._id }]
-      })
+      const user = await users.findOne(
+        isObjectIdString(request.params._id)
+          ? { _id: new fastify.mongo.ObjectId(request.params._id) }
+          : { nick: request.params._id }
+      )
 
       if (!user) {
         return reply.code(404).send({
           success: false,
           error: {
             name: 'userNotFound',
-            message: `User with _id ${userId} not found`
+            message: `User with _id ${request.params._id} not found`
           }
         })
       }
 
       const data = {
         ...user,
-        _id: userId.toString(),
+        _id: user._id.toString(),
         registered_date: user.registered_date.toISOString()
       }
 
