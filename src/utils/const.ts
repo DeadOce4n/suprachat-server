@@ -233,3 +233,5 @@ export const ALLOWED_IMG_MIME_TYPES = [
   'image/webp',
   'image/bmp'
 ]
+
+export const OBJECTID_REGEX = '^[0-9a-fA-F]{24}$'

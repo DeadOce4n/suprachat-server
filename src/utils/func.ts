@@ -4,6 +4,7 @@ import { promisify } from 'util'
 import bcrypt from 'bcrypt'
 
 import { oidSchema } from '@common/schemas.js'
+import { OBJECTID_REGEX } from './const.js'
 
 export const createResponseSchema = <TData extends TSchema>(
   dataSchema: TData
@@ -102,3 +103,6 @@ export const checkPasswordHashErgo = async (
 
 export const StringEnum = <T extends string[]>(values: [...T]) =>
   Type.Unsafe<T[number]>({ type: 'string', enum: values })
+
+export const isObjectIdString = (str: string) =>
+  new RegExp(OBJECTID_REGEX).test(str)
