@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: suprachat-backend
-          image: <IMAGE>
+          image: ttl.sh/suprachat-backend-24af2935-f192-4abd-b38f-e642b17853ac@sha256:c55902b406d09b7bd77319c53aff8ca35607fc9b6a9efbc1c8427702f34cfa03
           ports:
             - name: web
               containerPort: 3001
@@ -82,10 +82,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - beta-api.suprachat.net
+      - api.suprachat.net
       secretName: sc-backend-cert
   rules:
-    - host: beta-api.suprachat.net
+    - host: api.suprachat.net
       http:
         paths:
           - path: /
@@ -126,8 +126,9 @@ spec:
       - "PUT"
       - "PATCH"
     accessControlAllowOriginList:
-      - "https://beta.suprachat.net"
+      - "https://chat.suprachat.net"
       - "https://suprachat.net"
+      - "https://*.suprachat.net"
     accessControlMaxAge: 100
     addVaryHeader: true
     accessControlAllowHeaders:

@@ -63,10 +63,9 @@ spec:
       - "PUT"
       - "PATCH"
     accessControlAllowOriginList:
-      - "https://beta.suprachat.net"
       - "https://suprachat.net"
-      - "https://beta-chat.suprachat.net"
-      - "https://beta-irc.suprachat.net"
+      - "https://chat.suprachat.net"
+      - "https://*.suprachat.net"
     accessControlMaxAge: 100
     addVaryHeader: true
     accessControlAllowHeaders:
@@ -159,11 +158,11 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   namespace: suprachat
-  name: beta-irc.suprachat.net
+  name: irc.suprachat.net
 spec:
   secretName: ergo-cert
   dnsNames:
-  - beta-irc.suprachat.net
+  - irc.suprachat.net
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
