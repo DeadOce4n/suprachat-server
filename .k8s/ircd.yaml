@@ -76,6 +76,31 @@ spec:
       - "Upgrade"
       - "X-Forwarded-Proto"
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ergo
+  namespace: suprachat
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: suprachat-ssl-header@kubernetescrd,suprachat-ergo-cors@kubernetescrd,suprachat-ergo-cors@kubernetescrd
+spec:
+  tls:
+    - hosts:
+      - beta-irc.suprachat.net
+      secretName: ergo-cert
+  rules:
+    - host: beta-irc.suprachat.net
+      http:
+        paths:
+          - path: /webirc
+            pathType: Prefix
+            backend:
+              service:
+                name: ergo
+                port:
+                  name: websocket
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
