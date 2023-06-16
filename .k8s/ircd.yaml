@@ -121,7 +121,7 @@ spec:
       shareProcessNamespace: true
       containers:
         - name: ergo
-          image: ghcr.io/ergochat/ergo:v2.11.1
+          image: ttl.sh/suprachat-ergo-95d805f6-73f6-4105-93b4-f1b950b17051:10m@sha256:d7cc3005b62921fe8cb9f6c688659c19feedf42af236b868c40605ae99006753
           ports:
             - containerPort: 6667
               name: plain
@@ -135,6 +135,17 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 6697
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: sc-backend-env
+                  key: MONGO_URI
+            - name: AUTH_LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: sc-backend-env
+                  key: ERGO_AUTH_LOG_LEVEL
           volumeMounts:
             - name: ergo-storage
               mountPath: /ircd/db/
