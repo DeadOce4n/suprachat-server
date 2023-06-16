@@ -87,13 +87,13 @@ metadata:
 spec:
   tls:
     - hosts:
-      - beta-irc.suprachat.net
+      - irc.suprachat.net
       secretName: ergo-cert
   rules:
-    - host: beta-irc.suprachat.net
+    - host: irc.suprachat.net
       http:
         paths:
-          - path: /webirc
+          - path: /
             pathType: Prefix
             backend:
               service:
