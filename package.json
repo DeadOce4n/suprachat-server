@@ -14,7 +14,7 @@
     "format": "prettier --write src/",
     "style-check": "eslint src/**/*.ts && prettier --check src/",
     "type-check": "tsc --noEmit",
-    "ci:run": "tsx ./.dagger/index.ts"
+    "ci:run": "tsx ./ci/index.ts"
   },
   "author": "ThyDevourer <pedro@ivanpartida.xyz>",
   "license": "GPL-3.0",

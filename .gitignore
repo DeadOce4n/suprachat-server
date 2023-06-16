@@ -6,6 +6,6 @@ coverage/
 .nyc_output/
 ./ircd.yaml
 selfsigned-certificate.cer
-.k8s/env.yaml
+infra/env.yaml
 ircd.yaml
-!.k8s/ircd.yaml
+!infra/ircd.yaml

@@ -7,7 +7,7 @@ import path from 'path'
 import YAML from 'yaml'
 
 try {
-  const envPath = path.resolve('./.dagger/.env')
+  const envPath = path.resolve('./ci/.env')
   await fs.access(envPath)
   dotenv.config({ path: envPath })
 } catch (e) {
@@ -122,7 +122,9 @@ connect(
 
       const k8sClient = k8s.KubernetesObjectApi.makeApiClient(kubeConfig)
 
-      const manifest = await fs.readFile(path.resolve('./.k8s/deployment.yaml'))
+      const manifest = await fs.readFile(
+        path.resolve('./infra/deployment.yaml')
+      )
 
       const specs = YAML.parseAllDocuments(manifest.toString('utf8')).map(
         (obj) => obj.toJS()
