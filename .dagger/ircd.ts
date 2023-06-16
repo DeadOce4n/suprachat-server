@@ -76,7 +76,6 @@ export const ircdPipeline = async (client: Client) => {
     .withEntrypoint(['/ircd-bin/run.sh'])
 
   console.log(await container.stdout())
-  console.log(await container.directory('/ircd').entries())
 
   const imageRef = await container.publish(
     `ttl.sh/suprachat-ergo-${randomUUID()}:10m`
