@@ -12,6 +12,7 @@ import {
   ALLOWED_IMG_MIME_TYPES,
   ObjectIdString,
   PROFILE_PIC_MAX_SIZE,
+  Roles,
   S3_BUCKET_NAME,
   S3_REGION
 } from '@utils/const.js'
@@ -74,7 +75,7 @@ export default async function (fastify: FastifyInstance) {
         Static<typeof userWithOidSchema>
       >()
 
-      if (_id !== userFromToken._id) {
+      if (_id !== userFromToken._id && userFromToken.role !== Roles.Admin) {
         return reply.code(403).send({
           success: false,
           error: {
