@@ -7,3 +7,5 @@ coverage/
 ./ircd.yaml
 selfsigned-certificate.cer
 .k8s/env.yaml
+ircd.yaml
+!.k8s/ircd.yaml
