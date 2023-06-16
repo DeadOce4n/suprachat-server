@@ -1,7 +1,5 @@
-import type { FastifyInstance } from 'fastify'
+import type { MongoClient } from 'mongodb'
 import type { MongoMemoryServer } from 'mongodb-memory-server'
-
-type MongoClient = FastifyInstance['mongo']['client']
 
 const getDbHelper = (client: MongoClient, mongod: MongoMemoryServer) => ({
   client,
