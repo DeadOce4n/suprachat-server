@@ -31,6 +31,7 @@ export default function getErrorHandler(): Parameters<
         message: error.message
       },
       ...(('validation' in error &&
+        error.validation &&
         error.validation.map((v) => ({
           name: v.keyword,
           message: v.message
