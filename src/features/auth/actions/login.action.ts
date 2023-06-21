@@ -5,7 +5,7 @@ import type { FastifyInstance } from 'fastify'
 import { omit } from 'remeda'
 
 import { errorSchema } from '@common/schemas.js'
-import type { User } from '@features/users/module.js'
+import { UserModel } from '@features/users/module.js'
 import {
   checkPasswordHash,
   checkPasswordHashErgo,
@@ -73,19 +73,7 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
-      const collection = this.mongo.db?.collection<User>('users')
-
-      if (!collection) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'databaseUnavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const user = await collection.findOne({
+      const user = await UserModel.findOne({
         $or: [{ nick: username }, { email: username }]
       })
 
@@ -118,7 +106,7 @@ export default async function (fastify: FastifyInstance) {
       }
 
       if (user.password_from === 'ergo') {
-        await collection.updateOne(
+        await UserModel.updateOne(
           { _id: user._id },
           {
             $set: {

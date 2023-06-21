@@ -2,19 +2,24 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import dayjs from 'dayjs'
 import type { FastifyInstance } from 'fastify'
+import { omit } from 'remeda'
 
-import { errorSchema, defaultHeadersSchema } from '@common/schemas.js'
+import { defaultHeadersSchema, errorSchema } from '@common/schemas.js'
 import {
-  userSchema,
-  userWithOidSchema,
-  type User
+  UserDocument,
+  UserModel,
+  UserOptions,
+  userSchema
 } from '@features/users/module.js'
 import IRCClient from '@services/irc.service.js'
 import { Roles } from '@utils/const.js'
 import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
-import { omit } from 'remeda'
+import type { DocumentForInsert } from 'papr'
 
 const bodySchema = Type.Omit(userSchema, [
+  '_id',
+  'verified',
+  'active',
   'registered_date',
   'password_from',
   'role'
@@ -22,7 +27,7 @@ const bodySchema = Type.Omit(userSchema, [
 
 const responseSchema = createResponseSchema(
   Type.Intersect([
-    Type.Omit(userWithOidSchema, ['password']),
+    Type.Omit(userSchema, ['password']),
     Type.Object({ token: Type.String() })
   ])
 )
@@ -45,18 +50,7 @@ export default async function (fastify: FastifyInstance) {
       const {
         body: { nick, password, email }
       } = request
-      const users = this.mongo.db?.collection<User>('users')
-      if (!users) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'databaseUnavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const user = await users.findOne({ $or: [{ nick }, { email }] })
+      const user = await UserModel.findOne({ $or: [{ nick }, { email }] })
 
       if (user) {
         return reply.code(409).send({
@@ -100,7 +94,7 @@ export default async function (fastify: FastifyInstance) {
         email
       })
 
-      const newUser: User = {
+      const newUser: DocumentForInsert<UserDocument, UserOptions> = {
         ...request.body,
         password: await generatePasswordHash(password),
         registered_date: dayjs().toDate(),
@@ -108,7 +102,7 @@ export default async function (fastify: FastifyInstance) {
         role: Roles.Normal
       }
 
-      const { insertedId } = await users.insertOne(newUser)
+      const insertedUser = await UserModel.insertOne(newUser)
 
       const now = dayjs()
       const expiration = now.clone().add(30, 'minutes')
@@ -120,8 +114,8 @@ export default async function (fastify: FastifyInstance) {
       return reply.code(200).send({
         success: true,
         data: {
-          ...newUser,
-          _id: insertedId.toString(),
+          ...insertedUser,
+          _id: insertedUser._id.toString(),
           registered_date: newUser.registered_date.toISOString(),
           token
         },

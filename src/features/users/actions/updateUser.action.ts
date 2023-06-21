@@ -1,21 +1,18 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
-import type { WithId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
 import { errorSchema } from '@common/schemas.js'
+import { countries, ObjectIdString, Roles } from '@utils/const.js'
 import {
-  userSchema,
-  userWithOidSchema,
-  type User,
-  type UserSchema
-} from '../entities/user.model.js'
-import { ObjectIdString, Roles } from '@utils/const.js'
-import {
+  checkPasswordHash,
   createResponseSchema,
   generatePasswordHash,
-  checkPasswordHash
+  StringEnum
 } from '@utils/func.js'
+import UserModel, { UserDocument } from '../entities/user.model.js'
+import { userSchema } from '../schemas/user.schema.js'
 
 const paramsSchema = Type.Object(
   {
@@ -25,24 +22,17 @@ const paramsSchema = Type.Object(
 )
 
 const bodySchema = Type.Partial(
-  Type.Intersect([
-    Type.Omit(userSchema, ['active', 'registered_date', 'role', 'verified'], {
-      additionalProperties: false
-    }),
-    Type.Object(
-      {
-        role: Type.Enum(Roles),
-        verified: Type.Boolean()
-      },
-      { additionalProperties: false }
-    )
-  ]),
-  { additionalProperties: false }
+  Type.Object({
+    email: Type.String({ format: 'email' }),
+    password: Type.String({ minLength: 8 }),
+    country: StringEnum([...countries]),
+    about: Type.String({ maxLength: 300 }),
+    active: Type.Boolean(),
+    picture: Type.String({ format: 'uri' })
+  })
 )
 
-const responseSchema = createResponseSchema(
-  Type.Omit(userWithOidSchema, ['password'])
-)
+const responseSchema = createResponseSchema(Type.Omit(userSchema, ['password']))
 
 export default async function (fastify: FastifyInstance) {
   fastify.withTypeProvider<TypeBoxTypeProvider>().patch(
@@ -59,19 +49,8 @@ export default async function (fastify: FastifyInstance) {
       }
     },
     async function (request, reply) {
-      const users = this.mongo.db?.collection<User>('users')
-      if (!users) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'databaseUnavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const userId = new fastify.mongo.ObjectId(request.params._id)
-      const user = await users.findOne({ _id: userId })
+      const userId = new ObjectId(request.params._id)
+      const user = await UserModel.findOne({ _id: userId })
 
       if (!user) {
         return reply.code(404).send({
@@ -84,7 +63,7 @@ export default async function (fastify: FastifyInstance) {
       }
 
       const decodedToken = await request.jwtVerify<
-        UserSchema & { _id: string }
+        Omit<UserDocument, '_id'> & { _id: string }
       >()
 
       if (
@@ -119,15 +98,13 @@ export default async function (fastify: FastifyInstance) {
         )
       }
 
-      const updatedUser = (
-        await users.findOneAndUpdate(
-          { _id: userId },
-          {
-            $set: updatePayload
-          },
-          { returnDocument: 'after' }
-        )
-      ).value as WithId<User>
+      const updatedUser = (await UserModel.findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: updatePayload
+        },
+        { returnDocument: 'after' }
+      )) as UserDocument
 
       return reply.code(200).send({
         success: true,

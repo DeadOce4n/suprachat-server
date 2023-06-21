@@ -1,11 +1,10 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
-import { ObjectId } from '@fastify/mongodb'
-import type { WithId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 
-import { errorSchema, defaultHeadersSchema } from '@common/schemas.js'
-import { userWithOidSchema, type User } from '@features/users/module.js'
+import { defaultHeadersSchema, errorSchema } from '@common/schemas.js'
+import { UserDocument, UserModel, userSchema } from '@features/users/module.js'
 import IRCClient from '@services/irc.service.js'
 import { ObjectIdString } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
@@ -18,9 +17,7 @@ const verifyUserSchema = Type.Object(
   { additionalProperties: false }
 )
 
-const responseSchema = createResponseSchema(
-  Type.Omit(userWithOidSchema, ['password'])
-)
+const responseSchema = createResponseSchema(Type.Omit(userSchema, ['password']))
 
 export default async function (fastify: FastifyInstance) {
   fastify.withTypeProvider<TypeBoxTypeProvider>().put(
@@ -39,19 +36,8 @@ export default async function (fastify: FastifyInstance) {
     },
     async function (request, reply) {
       const { userId, code } = request.body
-      const users = this.mongo.db?.collection<User>('users')
 
-      if (!users) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'Database unavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const user = await users.findOne({ _id: new ObjectId(userId) })
+      const user = await UserModel.findOne({ _id: new ObjectId(userId) })
 
       if (!user) {
         return reply.code(404).send({
@@ -73,13 +59,11 @@ export default async function (fastify: FastifyInstance) {
       const ircClient = new IRCClient(userIp, this.log)
       await ircClient.verify({ username: user.nick, code })
 
-      const updatedUser = (
-        await users.findOneAndUpdate(
-          { _id: user._id },
-          { $set: { verified: true } },
-          { returnDocument: 'after' }
-        )
-      ).value as WithId<User>
+      const updatedUser = (await UserModel.findOneAndUpdate(
+        { _id: user._id },
+        { $set: { verified: true } },
+        { returnDocument: 'after' }
+      )) as UserDocument
 
       return reply.code(200).send({
         success: true,

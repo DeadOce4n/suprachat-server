@@ -235,3 +235,5 @@ export const ALLOWED_IMG_MIME_TYPES = [
 ]
 
 export const OBJECTID_REGEX = '^[0-9a-fA-F]{24}$'
+export const EMAIL_REGEX =
+  '^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$'

@@ -1,10 +1,12 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
+import { ObjectId } from 'mongodb'
 
 import { errorSchema } from '@common/schemas.js'
-import { userWithOidSchema, type User } from '../entities/user.model.js'
 import { createResponseSchema, isObjectIdString } from '@utils/func.js'
+import UserModel from '../entities/user.model.js'
+import { userSchema } from '../schemas/user.schema.js'
 
 const paramsSchema = Type.Object(
   {
@@ -13,9 +15,7 @@ const paramsSchema = Type.Object(
   { additionalProperties: false }
 )
 
-const responseSchema = createResponseSchema(
-  Type.Omit(userWithOidSchema, ['password'], { additionalProperties: false })
-)
+const responseSchema = createResponseSchema(Type.Omit(userSchema, ['password']))
 
 export default async function (fastify: FastifyInstance) {
   fastify.withTypeProvider<TypeBoxTypeProvider>().get(
@@ -30,20 +30,9 @@ export default async function (fastify: FastifyInstance) {
       }
     },
     async function (request, reply) {
-      const users = this.mongo.db?.collection<User>('users')
-      if (!users) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'databaseUnavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const user = await users.findOne(
+      const user = await UserModel.findOne(
         isObjectIdString(request.params._id)
-          ? { _id: new fastify.mongo.ObjectId(request.params._id) }
+          ? { _id: new ObjectId(request.params._id) }
           : { nick: request.params._id }
       )
 

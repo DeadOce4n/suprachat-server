@@ -1,7 +1,7 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import fastifyMultipart from '@fastify/multipart'
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
-import { Static, Type } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 import { ObjectId } from 'mongodb'
 import { nanoid } from 'nanoid/async'
@@ -18,7 +18,8 @@ import {
 } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
 import s3Client from '~/loaders/s3.js'
-import type { User, userWithOidSchema } from '../entities/user.model.js'
+import type { UserDocument } from '../entities/user.model.js'
+import UserModel from '../entities/user.model.js'
 
 const paramsSchema = Type.Object({ _id: ObjectIdString })
 const responseSchema = createResponseSchema(
@@ -48,18 +49,7 @@ export default async function (fastify: FastifyInstance) {
     async function (request, reply) {
       const { _id } = request.params
 
-      const users = this.mongo.db?.collection<User>('users')
-      if (!users) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'databaseUnavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const user = await users.findOne({ _id: new ObjectId(_id) })
+      const user = await UserModel.findOne({ _id: new ObjectId(_id) })
 
       if (!user) {
         return reply.code(404).send({
@@ -72,7 +62,7 @@ export default async function (fastify: FastifyInstance) {
       }
 
       const userFromToken = await request.jwtVerify<
-        Static<typeof userWithOidSchema>
+        Omit<UserDocument, '_id'> & { _id: string }
       >()
 
       if (_id !== userFromToken._id && userFromToken.role !== Roles.Admin) {
@@ -130,7 +120,7 @@ export default async function (fastify: FastifyInstance) {
 
         const imageUrl = `https://${S3_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/${key}`
 
-        await users.updateOne(
+        await UserModel.updateOne(
           { _id: new ObjectId(_id) },
           { $set: { picture: imageUrl } }
         )

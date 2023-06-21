@@ -1,32 +1,33 @@
-import { Type, type Static } from '@sinclair/typebox'
+import { schema, types } from 'papr'
 
-import { countries, Roles } from '@utils/const.js'
-import { addOidToSchema, StringEnum } from '@utils/func.js'
-import type { Prettify } from '@utils/types.js'
+import papr from '@common/db.js'
+import { countries, EMAIL_REGEX, Roles } from '@utils/const.js'
 
-export const userSchema = Type.Object(
+const userSchema = schema(
   {
-    nick: Type.String({ maxLength: 20, minLength: 3 }),
-    password: Type.String({ minLength: 8 }),
-    email: Type.String({ format: 'email' }),
-    country: Type.Optional(StringEnum([...countries])),
-    about: Type.Optional(Type.String({ maxLength: 300 })),
-    verified: Type.Boolean({ default: false }),
-    active: Type.Boolean({ default: true }),
-    registered_date: Type.String({ format: 'date-time' }),
-    password_from: StringEnum(['ergo', 'supra']),
-    picture: Type.Optional(Type.String({ format: 'uri' })),
-    role: Type.Enum(Roles, { default: Roles.Normal })
+    nick: types.string({ maxLength: 20, minLength: 3, required: true }),
+    password: types.string({ minLength: 8, required: true }),
+    email: types.string({ minLength: 5, required: true }),
+    country: types.enum([...countries], { required: false }),
+    about: types.string({ maxLength: 300, required: false }),
+    verified: types.boolean({ required: true }),
+    active: types.boolean({ required: true }),
+    registered_date: types.date({ required: true }),
+    password_from: types.enum(['ergo' as const, 'supra' as const], {
+      required: true
+    }),
+    picture: types.string({
+      pattern: EMAIL_REGEX,
+      required: false
+    }),
+    role: types.enum(Object.values(Roles), { required: true })
   },
-  { additionalProperties: false }
+  { defaults: { verified: false, active: true, role: Roles.Normal } }
 )
 
-export type UserSchema = Static<typeof userSchema>
+export type UserDocument = (typeof userSchema)[0]
+export type UserOptions = (typeof userSchema)[1]
 
-export const userWithOidSchema = addOidToSchema(userSchema)
+const UserModel = papr.model('users', userSchema)
 
-export type User = Prettify<
-  Omit<UserSchema, 'registered_date'> & {
-    registered_date: Date
-  }
->
+export default UserModel

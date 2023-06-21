@@ -1,11 +1,12 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
+import { ObjectId } from 'mongodb'
 
 import { errorSchema } from '@common/schemas.js'
-import type { User, UserSchema } from '@features/users/module.js'
 import { ObjectIdString, Roles } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
+import UserModel, { UserDocument } from '../entities/user.model'
 
 const paramsSchema = Type.Object(
   {
@@ -30,19 +31,8 @@ export default async function (fastify: FastifyInstance) {
       }
     },
     async function (request, reply) {
-      const users = this.mongo.db?.collection<User>('users')
-      if (!users) {
-        return reply.code(500).send({
-          success: false,
-          error: {
-            name: 'databaseUnavailable',
-            message: 'Database connection error'
-          }
-        })
-      }
-
-      const userId = new fastify.mongo.ObjectId(request.params._id)
-      const user = await users.findOne({ _id: userId })
+      const userId = new ObjectId(request.params._id)
+      const user = await UserModel.findOne({ _id: userId })
 
       if (!user) {
         return reply.code(404).send({
@@ -55,7 +45,7 @@ export default async function (fastify: FastifyInstance) {
       }
 
       const decodedToken = await request.jwtVerify<
-        UserSchema & { _id: string }
+        Omit<UserDocument, '_id'> & { _id: string }
       >()
 
       if (decodedToken.role !== Roles.Admin) {
@@ -68,7 +58,7 @@ export default async function (fastify: FastifyInstance) {
         })
       }
 
-      await users.findOneAndUpdate(
+      await UserModel.findOneAndUpdate(
         { _id: userId },
         {
           $set: {
