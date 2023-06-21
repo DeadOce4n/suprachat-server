@@ -37,7 +37,7 @@ connect(
     // Stage 1: Lint, format, typecheck, test
     const test = client
       .container()
-      .from('node:18-slim')
+      .from('node:18-bullseye-slim')
       .withMountedDirectory('/home/node/app', source)
       .withMountedCache('/home/node/.pnpm-store', nodeCache)
       .withEnvVariable('SECRET_KEY', 'sacarrácatelas')
@@ -58,9 +58,9 @@ connect(
       .withExec(['pnpm', 'install', '--frozen-lockfile'])
 
     await Promise.all([
-      test.withExec(['pnpm', 'lint']).exitCode(),
-      test.withExec(['pnpm', 'format']).exitCode(),
-      test.withExec(['pnpm', 'type-check']).exitCode(),
+      test.withExec(['pnpm', 'lint:check']).exitCode(),
+      test.withExec(['pnpm', 'format:check']).exitCode(),
+      test.withExec(['pnpm', 'typecheck']).exitCode(),
       test.withExec(['pnpm', 'coverage']).exitCode()
     ])
 
@@ -68,28 +68,7 @@ connect(
     if (process.env.CI_PIPELINE_SOURCE !== 'merge_request_event') {
       console.log('Building and uploading image...')
 
-      const build = client
-        .container()
-        .from('node:18-slim')
-        .withDirectory('/home/node/app', client.host().directory('.'), {
-          include,
-          exclude
-        })
-        .withMountedCache('/home/node/.pnpm-store', nodeCache)
-        .withExec(['corepack', 'enable'])
-        .withExec(['corepack', 'prepare', 'pnpm@latest-8', '--activate'])
-        .withExec([
-          'pnpm',
-          'config',
-          'set',
-          'store-dir',
-          '/home/node/.pnpm-store'
-        ])
-        .withExec(['chown', '-R', 'node:node', '/home/node/.pnpm-store'])
-        .withExec(['chown', '-R', 'node:node', '/home/node/app'])
-        .withWorkdir('/home/node/app')
-        .withExec(['apt-get', '-qq', 'update'])
-        .withExec(['apt-get', '-qq', 'install', '-y', 'curl'])
+      const build = test
         .withExec(['pnpm', 'prune', '--prod'])
         .withEntrypoint(['pnpm', 'start'])
 
