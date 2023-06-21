@@ -10,11 +10,12 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "dependencies": "husky install",
-    "lint": "eslint --fix src/**/*.ts",
-    "format": "prettier --write src/",
-    "style-check": "eslint src/**/*.ts && prettier --check src/",
-    "type-check": "tsc --noEmit",
-    "ci:run": "tsx ./ci/index.ts"
+    "lint": "eslint --fix \"src/**/*.ts\"",
+    "lint:check": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "dagger": "tsx ./ci/index.ts"
   },
   "author": "ThyDevourer <pedro@ivanpartida.xyz>",
   "license": "GPL-3.0",
