@@ -1,24 +1,23 @@
-import mongodb from '@fastify/mongodb'
+import { faker } from '@faker-js/faker'
+import dotenv from 'dotenv'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest'
-import { faker } from '@faker-js/faker'
 
 import createApp from '../../../app.js'
-import getDbHelper from '../../../test/utils/db.js'
+import { client, connect } from '../../../common/db.js'
 import IRCClient from '../../../services/irc.service.js'
-import dotenv from 'dotenv'
+import getDbHelper from '../../../test/utils/db.js'
 
 dotenv.config()
 
 describe('test auth module actions', async () => {
   const mongod = await MongoMemoryServer.create()
-  const app = createApp().register(mongodb, {
-    url: `${mongod.getUri()}suprachat`
-  })
-
+  const app = createApp()
   await app.ready()
 
-  const dbHelper = getDbHelper(app.mongo.client, mongod)
+  await connect(mongod.getUri())
+  await app.ready()
+  const dbHelper = getDbHelper(client, mongod)
 
   afterEach(async () => dbHelper.clearDatabase())
   afterAll(async () => {
