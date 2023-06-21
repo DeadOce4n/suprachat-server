@@ -57,6 +57,10 @@ connect(
       .withExec(['apt-get', '-qq', 'install', '-y', 'curl'])
       .withExec(['pnpm', 'install', '--frozen-lockfile'])
 
+    const testStdout = await test.stdout()
+
+    console.log(testStdout)
+
     await Promise.all([
       test.withExec(['pnpm', 'lint:check']).exitCode(),
       test.withExec(['pnpm', 'format:check']).exitCode(),
@@ -69,6 +73,8 @@ connect(
       console.log('Building and uploading image...')
 
       const build = test
+        .withoutMount('/home/node/app')
+        .withDirectory('/home/node/app', test.directory('/home/node/app'))
         .withExec(['pnpm', 'prune', '--prod'])
         .withEntrypoint(['pnpm', 'start'])
 
