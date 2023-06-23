@@ -40,3 +40,6 @@ build-deploy:
     reports:
       junit:
         - coverage/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml

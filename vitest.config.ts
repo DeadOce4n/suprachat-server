@@ -5,10 +5,12 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     coverage: {
+      provider: 'v8',
       exclude: [
         ...(configDefaults.coverage.exclude as string[]),
         'src/**/test/utils/*'
-      ]
+      ],
+      reporter: ['text', 'cobertura']
     },
     reporters: ['default', 'junit'],
     outputFile: './coverage/junit.xml'
