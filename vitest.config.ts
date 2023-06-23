@@ -9,6 +9,8 @@ export default defineConfig({
         ...(configDefaults.coverage.exclude as string[]),
         'src/**/test/utils/*'
       ]
-    }
+    },
+    reporters: ['default', 'junit'],
+    outputFile: './coverage/junit.xml'
   }
 })

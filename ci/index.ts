@@ -65,7 +65,10 @@ connect(
       test.withExec(['pnpm', 'lint:check']).exitCode(),
       test.withExec(['pnpm', 'format:check']).exitCode(),
       test.withExec(['pnpm', 'typecheck']).exitCode(),
-      test.withExec(['pnpm', 'coverage']).exitCode()
+      test
+        .withExec(['pnpm', 'coverage'])
+        .directory('./coverage')
+        .export('./coverage')
     ])
 
     // Stage 2: Build image

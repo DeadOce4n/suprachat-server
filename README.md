@@ -1,6 +1,8 @@
 # Suprachat Backend
 
 [![pipeline status](https://gitlab.com/suprachat/backend/badges/main/pipeline.svg)](https://gitlab.com/suprachat/backend/-/commits/main)
+[![coverage report](https://gitlab.com/suprachat/backend/badges/main/coverage.svg)](https://gitlab.com/suprachat/backend/-/commits/main)
+[![code style](https://img.shields.io/badge/code%20style-prettier-F7B93E?logo=Prettier)](https://prettier.io)
 
 This is a very simple service/API for interacting with an IRC daemon using the `draft/account-registration` capability,
 written entirely in TypeScript.

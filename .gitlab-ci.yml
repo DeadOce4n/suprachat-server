@@ -35,3 +35,8 @@ build-deploy:
     - if: $CI_PIPELINE_SOURCE == 'web'
   tags:
     - suprachat
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - coverage/junit.xml
