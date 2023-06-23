@@ -47,7 +47,6 @@
     "@aws-sdk/client-s3": "^3.309.0",
     "@fastify/cors": "^8.2.1",
     "@fastify/jwt": "^6.7.1",
-    "@fastify/mongodb": "^6.2.0",
     "@fastify/multipart": "^7.6.0",
     "@fastify/type-provider-typebox": "^2.4.0",
     "@sinclair/typebox": "^0.25.24",
