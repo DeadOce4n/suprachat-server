@@ -75,7 +75,7 @@ connect(
       const build = test
         .withoutMount('/home/node/app')
         .withDirectory('/home/node/app', test.directory('/home/node/app'))
-        .withExec(['pnpm', 'prune', '--prod'])
+        .withExec(['pnpm', 'prune', '--prod', '--config.ignore-scripts=true'])
         .withEntrypoint(['pnpm', 'start'])
 
       const uuid = randomUUID()
