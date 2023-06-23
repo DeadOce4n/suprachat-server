@@ -13,6 +13,7 @@ export const { S3_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_BUCKET_NAME } =
   process.env
 export const { VERCEL_API_URL, VERCEL_ACCESS_TOKEN, VERCEL_PROJECT_ID } =
   process.env
+export const IPV6 = (process.env.IPV6 ?? 'true') === 'true'
 
 export const FORBIDDEN_CHARS = ' ,*?.!:<>\'";#~&@%+-'.split('')
 

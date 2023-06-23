@@ -1,27 +1,24 @@
-import mongodb from '@fastify/mongodb'
-
+import { connect, disconnect } from '@common/db.js'
+import { IPV6, MONGO_URI, PORT } from '@utils/const.js'
 import createApp from './app.js'
-import { MONGO_URI, DB_NAME, PORT } from '@utils/const.js'
-
-process.on('SIGTERM', () => process.exit(1))
 
 const server = createApp()
 
-server.log.debug(MONGO_URI)
-
-server.register(mongodb, {
-  forceClose: true,
-  url: MONGO_URI,
-  database: DB_NAME,
-  family: 4
-})
-
 await server.ready()
 
-server.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
+server.listen({ port: PORT, host: '0.0.0.0' }, async (err) => {
   server.log.debug(`\n${server.printRoutes()}`)
+
+  await connect(MONGO_URI, { family: IPV6 ? 6 : 4 })
+
   if (err) {
     server.log.error(err)
     process.emit('SIGTERM')
   }
+})
+
+process.on('SIGTERM', async () => {
+  await disconnect()
+  await server.close()
+  process.exit(1)
 })

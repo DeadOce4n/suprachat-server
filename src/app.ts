@@ -8,17 +8,20 @@ import getErrorHandler from '@utils/error.js'
 import { loadEnv, getDefaultOpts } from './config.js'
 
 const createApp = (opts: ReturnType<typeof getDefaultOpts> = {}) => {
-  const defaultOpts = getDefaultOpts()
-  const app = fastify({ ...defaultOpts, ...opts })
+  const app = fastify({ ...getDefaultOpts(), ...opts })
+
   loadEnv(app)
+
   app.register(jwt, {
     secret: process.env.SECRET_KEY
   })
+
   if (process.env.NODE_ENV !== 'test') {
     app.register(cors, {
       origin: CORS_ORIGINS
     })
   }
+
   Object.entries(features).forEach(([name, actions]) =>
     Object.values(actions).forEach((action) =>
       app
