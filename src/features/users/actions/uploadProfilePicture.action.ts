@@ -17,7 +17,7 @@ import {
   S3_REGION
 } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
-import s3Client from '~/loaders/s3.js'
+import s3Client from '~/common/s3.js'
 import type { UserDocument } from '../entities/user.model.js'
 import UserModel from '../entities/user.model.js'
 
