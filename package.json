@@ -9,7 +9,7 @@
     "dev": "NODE_ENV=development tsx watch -r dotenv/config src/server.ts",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "dependencies": "husky install",
+    "prepare": "husky install",
     "lint": "eslint --fix \"src/**/*.ts\"",
     "lint:check": "eslint \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\"",
