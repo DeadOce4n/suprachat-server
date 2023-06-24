@@ -27,13 +27,6 @@ export const errorSchema = Type.Object(
 
 export type ErrorSchema = Static<typeof errorSchema>
 
-export const oidSchema = Type.Object(
-  {
-    _id: Type.String({ pattern: '^[0-9a-fA-F]{24}$' })
-  },
-  { additionalProperties: false }
-)
-
 export const defaultHeadersSchema = Type.Object({
   'cf-connecting-ip': Type.Optional(
     Type.Union([

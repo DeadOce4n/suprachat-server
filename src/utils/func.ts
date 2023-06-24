@@ -1,9 +1,8 @@
-import { TObject, Type, type TSchema } from '@sinclair/typebox'
+import { Type, type TSchema } from '@sinclair/typebox'
 import { createHash, pbkdf2, randomBytes } from 'crypto'
 import { promisify } from 'util'
 import bcrypt from 'bcrypt'
 
-import { oidSchema } from '@common/schemas.js'
 import { OBJECTID_REGEX } from './const.js'
 
 export const createResponseSchema = <TData extends TSchema>(
@@ -26,9 +25,6 @@ export const createResponseSchema = <TData extends TSchema>(
     },
     { additionalProperties: false }
   )
-
-export const addOidToSchema = <TData extends TObject>(schema: TData) =>
-  Type.Intersect([schema, oidSchema])
 
 export const parseSortOperator = (operator?: string) => {
   const query: Record<string, 1 | -1> = {}
