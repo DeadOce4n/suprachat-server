@@ -5,7 +5,8 @@
 [![code style](https://img.shields.io/badge/code%20style-prettier-F7B93E?logo=Prettier)](https://prettier.io)
 
 This is a very simple REST-ish API for managing user accounts on SupraChat's IRC network. It allows account registration
-on the IRC daemon through the [`draft/account-registration`] capability. It's written entirely in TypeScript.
+on the IRC daemon through the [`draft/account-registration`](https://ircv3.net/specs/extensions/account-registration)
+capability. It's written entirely in TypeScript.
 
 Built with:
 
