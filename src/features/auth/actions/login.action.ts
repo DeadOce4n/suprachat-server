@@ -31,6 +31,8 @@ export default async function (fastify: FastifyInstance) {
     '/login',
     {
       schema: {
+        description: 'Get a token for authentication',
+        tags: ['auth'],
         body: bodySchema,
         response: {
           200: responseSchema,

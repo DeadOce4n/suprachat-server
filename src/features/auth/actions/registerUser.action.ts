@@ -2,6 +2,7 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import dayjs from 'dayjs'
 import type { FastifyInstance } from 'fastify'
+import type { DocumentForInsert } from 'papr'
 import { omit } from 'remeda'
 
 import { defaultHeadersSchema, errorSchema } from '@common/schemas.js'
@@ -14,7 +15,6 @@ import {
 import IRCClient from '@services/irc.service.js'
 import { Roles } from '@utils/const.js'
 import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
-import type { DocumentForInsert } from 'papr'
 
 const bodySchema = Type.Omit(userSchema, [
   '_id',
@@ -37,6 +37,8 @@ export default async function (fastify: FastifyInstance) {
     '/signup',
     {
       schema: {
+        description: 'Create a new account in the service and in the IRCd.',
+        tags: ['auth'],
         body: bodySchema,
         response: {
           200: responseSchema,

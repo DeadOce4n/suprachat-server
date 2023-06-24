@@ -22,6 +22,8 @@ export default async function (fastify: FastifyInstance) {
     '/:_id',
     {
       schema: {
+        description: "Disable a user's account",
+        tags: ['users'],
         params: paramsSchema,
         response: {
           200: responseSchema,

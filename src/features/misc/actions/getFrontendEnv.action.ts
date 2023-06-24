@@ -28,6 +28,8 @@ export default async function (fastify: FastifyInstance) {
     '/get-env',
     {
       schema: {
+        description: "Get an environment variable's value from Vercel's API",
+        tags: ['misc'],
         querystring: querySchema,
         response: {
           200: responseSchema,

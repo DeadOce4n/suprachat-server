@@ -39,6 +39,8 @@ export default async function (fastify: FastifyInstance) {
     '/:_id',
     {
       schema: {
+        description: "Edit a user's profile",
+        tags: ['users'],
         params: paramsSchema,
         body: bodySchema,
         response: {

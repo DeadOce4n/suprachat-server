@@ -22,6 +22,8 @@ export default async function (fastify: FastifyInstance) {
     '/:_id',
     {
       schema: {
+        description: 'Get a single user by _id or nick',
+        tags: ['users'],
         params: paramsSchema,
         response: {
           200: responseSchema,

@@ -24,6 +24,9 @@ export default async function (fastify: FastifyInstance) {
     '/verify',
     {
       schema: {
+        description:
+          'Verify a previously registered account, using the received code.',
+        tags: ['auth'],
         response: {
           200: responseSchema,
           400: errorSchema,
