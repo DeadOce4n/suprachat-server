@@ -25,7 +25,7 @@ const responseSchema = createResponseSchema(
 
 export default async function (fastify: FastifyInstance) {
   fastify.withTypeProvider<TypeBoxTypeProvider>().get(
-    '/get-env',
+    '/env',
     {
       schema: {
         description: "Get an environment variable's value from Vercel's API",

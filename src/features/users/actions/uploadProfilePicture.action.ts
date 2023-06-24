@@ -33,7 +33,7 @@ export default async function (fastify: FastifyInstance) {
     }
   })
   fastify.withTypeProvider<TypeBoxTypeProvider>().post(
-    '/:_id/upload-profile-picture',
+    '/:_id/picture',
     {
       schema: {
         description: "Upload a user's profile picture",
