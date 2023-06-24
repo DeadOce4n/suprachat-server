@@ -52,7 +52,7 @@ export default async function (fastify: FastifyInstance) {
         })
       }
       const url = `${VERCEL_API_URL}/v1/projects/${VERCEL_PROJECT_ID}/env/${field}`
-      this.log.info(url)
+
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${VERCEL_ACCESS_TOKEN}`
