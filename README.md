@@ -4,14 +4,18 @@
 [![coverage report](https://gitlab.com/suprachat/backend/badges/main/coverage.svg)](https://gitlab.com/suprachat/backend/-/commits/main)
 [![code style](https://img.shields.io/badge/code%20style-prettier-F7B93E?logo=Prettier)](https://prettier.io)
 
-This is a very simple service/API for interacting with an IRC daemon using the `draft/account-registration` capability,
-written entirely in TypeScript.
+This is a very simple REST-ish API for managing user accounts on SupraChat's IRC network. It allows account registration
+on the IRC daemon through the [`draft/account-registration`] capability. It's written entirely in TypeScript.
 
 Built with:
 
 - [Fastify](https://www.fastify.io/)
 - [TypeBox](https://github.com/sinclairzx81/typebox)
 - [Papr](https://plexinc.github.io/papr/#/)
+- [Vitest](https://vitest.dev/)
+- [Dagger](https://dagger.io/)
+
+And many more awesome, open source tools and libraries!
 
 ## Development environment
 
@@ -66,9 +70,20 @@ pnpm format:check
 ```
 
 This project uses [tsx](https://github.com/esbuild-kit/tsx) as its runtime, so transpiling
-to JS is not necessary, `tsc` is only used for type-checking, which should be done by your
-IDE as you code, but can be run manually:
+to JS is not necessary. `tsc` is only used for type-checking (both in CI and in your IDE as
+you code), but can be run manually:
 
 ```
 pnpm typecheck
 ```
+
+### Pipeline testing
+
+This project uses [Dagger](https://dagger.io/), which means CI/CD can be tested locally
+with the following command:
+
+```
+pnpm dagger
+```
+
+> **Pro tip:** [install the Dagger CLI](https://docs.dagger.io/cli/465058/install) and use `dagger run pnpm dagger` instead to get fancier terminal output
