@@ -109,7 +109,7 @@ export default async function (fastify: FastifyInstance) {
       const now = dayjs()
       const expiration = now.clone().add(30, 'minutes')
 
-      const token = this.jwt.sign(omit(newUser, ['password']), {
+      const token = this.jwt.sign(omit(insertedUser, ['password']), {
         expiresIn: expiration.diff(now).toString()
       })
 
