@@ -7,5 +7,5 @@ coverage/
 ./ircd.yaml
 selfsigned-certificate.cer
 infra/env.yaml
-ircd.yaml
 !infra/ircd.yaml
+ircd/
