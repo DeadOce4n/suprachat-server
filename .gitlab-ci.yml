@@ -1,5 +1,5 @@
 .docker:
-  image: node:18-alpine
+  image: node:18-bullseye-slim
   services:
     - docker:${DOCKER_VERSION}-dind
   variables:
@@ -16,7 +16,7 @@
     - corepack enable
     - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
-    - apk add docker-cli
+    - apt -qq update -y && apt -qq install -y docker.io
 
 build-deploy:
   extends: [.dagger]
