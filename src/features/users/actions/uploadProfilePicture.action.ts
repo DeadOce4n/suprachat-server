@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
-import fastifyMultipart from '@fastify/multipart'
+import multipart from '@fastify/multipart'
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
@@ -27,7 +27,7 @@ const responseSchema = createResponseSchema(
 )
 
 export default async function (fastify: FastifyInstance) {
-  fastify.register(fastifyMultipart, {
+  fastify.register(multipart, {
     limits: {
       fileSize: PROFILE_PIC_MAX_SIZE
     }
@@ -36,6 +36,8 @@ export default async function (fastify: FastifyInstance) {
     '/:_id/upload-profile-picture',
     {
       schema: {
+        description: "Upload a user's profile picture",
+        tags: ['users'],
         params: paramsSchema,
         response: {
           200: responseSchema,

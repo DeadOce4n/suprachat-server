@@ -12,11 +12,15 @@ dotenv.config()
 
 describe('test auth module actions', async () => {
   const mongod = await MongoMemoryServer.create()
-  const app = createApp()
+  const app = await createApp()
+
   await app.ready()
 
-  await connect(mongod.getUri())
+  const conn = connect.bind(app)
+
+  await conn(mongod.getUri())
   await app.ready()
+
   const dbHelper = getDbHelper(client, mongod)
 
   afterEach(async () => dbHelper.clearDatabase())

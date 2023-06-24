@@ -21,6 +21,8 @@ export default async function (fastify: FastifyInstance) {
     '/',
     {
       schema: {
+        description: 'List users with filtering and pagination',
+        tags: ['users'],
         response: {
           200: responseSchema
         },

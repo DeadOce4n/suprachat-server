@@ -48,6 +48,8 @@
     "@fastify/cors": "^8.2.1",
     "@fastify/jwt": "^6.7.1",
     "@fastify/multipart": "^7.6.0",
+    "@fastify/swagger": "^8.6.0",
+    "@fastify/swagger-ui": "^1.9.0",
     "@fastify/type-provider-typebox": "^2.4.0",
     "@sinclair/typebox": "^0.25.24",
     "bcrypt": "^5.1.0",
