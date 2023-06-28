@@ -1,4 +1,4 @@
-import { connect, disconnect } from '@common/db.js'
+import { connect, disconnect } from '@common/loaders/db.js'
 import { IPV6, MONGO_URI, PORT } from '@utils/const.js'
 import createApp from './app.js'
 

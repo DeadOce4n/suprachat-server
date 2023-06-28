@@ -35,6 +35,5 @@
       "@services/*": ["services/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/test/*"]
+  "include": ["src/**/*"]
 }

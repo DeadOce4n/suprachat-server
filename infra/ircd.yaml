@@ -133,6 +133,7 @@ spec:
             tcpSocket:
               port: 6697
           livenessProbe:
+            periodSeconds: 60
             tcpSocket:
               port: 6697
           env:

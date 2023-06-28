@@ -12,7 +12,7 @@ import {
   UserOptions,
   userSchema
 } from '@features/users/module.js'
-import IRCClient from '@services/irc.service.js'
+import IRCClient from '@common/services/irc.service.js'
 import { Roles } from '@utils/const.js'
 import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
 

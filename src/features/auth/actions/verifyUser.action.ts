@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb'
 
 import { defaultHeadersSchema, errorSchema } from '@common/schemas.js'
 import { UserDocument, UserModel, userSchema } from '@features/users/module.js'
-import IRCClient from '@services/irc.service.js'
+import IRCClient from '@common/services/irc.service.js'
 import { ObjectIdString } from '@utils/const.js'
 import { createResponseSchema } from '@utils/func.js'
 

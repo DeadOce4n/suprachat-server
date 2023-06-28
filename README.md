@@ -37,6 +37,8 @@ pnpm install
 pnpm dev
 ```
 
+> The server's API docs can be accessed at [http://localhost:3000/docs](http://localhost:3000/docs) (change the port to whatever you've chosen).
+
 ### Running tests
 
 Run tests in watch mode to get instant feedback (powered by [vitest](https://vitest.dev/)):

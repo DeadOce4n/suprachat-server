@@ -1,6 +1,6 @@
 import { schema, types } from 'papr'
 
-import papr from '@common/db.js'
+import papr from '@common/loaders/db.js'
 import { countries, EMAIL_REGEX, Roles } from '@utils/const.js'
 
 const userSchema = schema(
