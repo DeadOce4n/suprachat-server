@@ -1,7 +1,7 @@
 import { schema, types } from 'papr'
 
 import papr from '@common/loaders/db.js'
-import { countries, EMAIL_REGEX, Roles } from '@utils/const.js'
+import { countries, URI_REGEX, Roles } from '@utils/const.js'
 
 const userSchema = schema(
   {
@@ -17,7 +17,7 @@ const userSchema = schema(
       required: true
     }),
     picture: types.string({
-      pattern: EMAIL_REGEX,
+      pattern: URI_REGEX,
       required: false
     }),
     role: types.enum(Object.values(Roles), { required: true })
