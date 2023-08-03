@@ -3,7 +3,12 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:n/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -11,14 +16,17 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
+    "n/no-missing-import": "off",
+    "n/no-unpublished-import": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "error",
       {
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
       }
-    ]
-  },
-  "ignorePatterns": ["!.dagger"]
+    ],
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
 }
