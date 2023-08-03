@@ -1,7 +1,7 @@
 import { schema, types } from 'papr'
 
-import papr from '@common/loaders/db.js'
-import { countries, URI_REGEX, Roles } from '@utils/const.js'
+import papr from '@/common/loaders/db.ts'
+import { countries, URI_REGEX, Roles } from '@/utils/const.ts'
 
 const userSchema = schema(
   {

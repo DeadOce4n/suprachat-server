@@ -3,7 +3,7 @@ import { createHash, pbkdf2, randomBytes } from 'crypto'
 import { promisify } from 'util'
 import bcrypt from 'bcrypt'
 
-import { OBJECTID_REGEX } from './const.js'
+import { OBJECTID_REGEX } from './const.ts'
 
 export const createResponseSchema = <TData extends TSchema>(
   dataSchema: TData

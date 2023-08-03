@@ -3,10 +3,11 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 import { ObjectId } from 'mongodb'
 
-import { errorSchema } from '@common/schemas.js'
-import { ObjectIdString, Roles } from '@utils/const.js'
-import { createResponseSchema } from '@utils/func.js'
-import UserModel, { UserDocument } from '../entities/user.model'
+import { errorSchema } from '@/common/schemas.ts'
+import { ObjectIdString, Roles } from '@/utils/const.ts'
+import { createResponseSchema } from '@/utils/func.ts'
+import type { UserDocument } from '../entities/user.model.ts'
+import UserModel from '../entities/user.model.ts'
 
 const paramsSchema = Type.Object(
   {

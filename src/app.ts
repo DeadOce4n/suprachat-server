@@ -4,10 +4,10 @@ import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
 
-import * as features from '@features/features.js'
-import { CORS_ORIGINS } from '@utils/const.js'
-import getErrorHandler from '@utils/error.js'
-import { getDefaultOpts, loadEnv } from './config.js'
+import * as features from '@/features/features.ts'
+import { CORS_ORIGINS } from '@/utils/const.ts'
+import getErrorHandler from '@/utils/error.ts'
+import { getDefaultOpts, loadEnv } from './config.ts'
 
 const createApp = async (opts: ReturnType<typeof getDefaultOpts> = {}) => {
   const app = fastify({ ...getDefaultOpts(), ...opts })

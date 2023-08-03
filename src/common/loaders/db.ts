@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { MongoClient, type MongoClientOptions } from 'mongodb'
 import Papr from 'papr'
 
-import { DB_NAME } from '@utils/const.js'
+import { DB_NAME } from '@/utils/const.ts'
 
 export let client: MongoClient
 

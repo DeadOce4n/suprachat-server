@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3'
-import { S3_ACCESS_KEY, S3_SECRET_KEY, S3_REGION } from '@utils/const'
+import { S3_ACCESS_KEY, S3_SECRET_KEY, S3_REGION } from '@/utils/const.ts'
 
 const s3Client = new S3Client({
   region: S3_REGION,

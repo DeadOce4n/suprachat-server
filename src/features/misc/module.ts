@@ -1,4 +1,4 @@
-import getFrontendEnv from './actions/getFrontendEnv.action.js'
+import getFrontendEnv from './actions/getFrontendEnv.action.ts'
 
 export default {
   getFrontendEnv

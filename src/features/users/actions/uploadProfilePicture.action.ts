@@ -7,7 +7,7 @@ import { ObjectId } from 'mongodb'
 import { nanoid } from 'nanoid/async'
 import sharp from 'sharp'
 
-import { errorSchema } from '@common/schemas.js'
+import { errorSchema } from '@/common/schemas.ts'
 import {
   ALLOWED_IMG_MIME_TYPES,
   ObjectIdString,
@@ -15,11 +15,11 @@ import {
   Roles,
   S3_BUCKET_NAME,
   S3_REGION
-} from '@utils/const.js'
-import { createResponseSchema } from '@utils/func.js'
-import s3Client from '@common/loaders/s3.js'
-import type { UserDocument } from '../entities/user.model.js'
-import UserModel from '../entities/user.model.js'
+} from '@/utils/const.ts'
+import { createResponseSchema } from '@/utils/func.ts'
+import s3Client from '@/common/loaders/s3.ts'
+import type { UserDocument } from '../entities/user.model.ts'
+import UserModel from '../entities/user.model.ts'
 
 const paramsSchema = Type.Object({ _id: ObjectIdString })
 const responseSchema = createResponseSchema(

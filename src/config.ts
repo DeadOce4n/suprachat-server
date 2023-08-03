@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyServerOptions } from 'fastify'
-import { LOG_LEVEL } from '@utils/const.js'
+import { LOG_LEVEL } from '@/utils/const.ts'
 
 export function loadEnv(app: FastifyInstance) {
   const requiredEnvVars = [

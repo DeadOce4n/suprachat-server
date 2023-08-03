@@ -1,6 +1,6 @@
-import { connect, disconnect } from '@common/loaders/db.js'
-import { IPV6, MONGO_URI, PORT } from '@utils/const.js'
-import createApp from './app.js'
+import { connect, disconnect } from '@/common/loaders/db.ts'
+import { IPV6, MONGO_URI, PORT } from '@/utils/const.ts'
+import createApp from './app.ts'
 
 const server = await createApp()
 
@@ -21,5 +21,4 @@ server.listen({ port: PORT, host: '0.0.0.0' }, async (err) => {
 process.on('SIGTERM', async () => {
   await disconnect()
   await server.close()
-  process.exit(1)
 })

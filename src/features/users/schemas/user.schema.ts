@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox'
-import { ObjectIdString, countries, Roles } from '@utils/const.js'
-import { StringEnum } from '@utils/func.js'
+import { ObjectIdString, countries, Roles } from '@/utils/const.ts'
+import { StringEnum } from '@/utils/func.ts'
 
 export const userSchema = Type.Object(
   {

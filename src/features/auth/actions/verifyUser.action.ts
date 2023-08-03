@@ -3,11 +3,12 @@ import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 import { ObjectId } from 'mongodb'
 
-import { defaultHeadersSchema, errorSchema } from '@common/schemas.js'
-import { UserDocument, UserModel, userSchema } from '@features/users/module.js'
-import IRCClient from '@common/services/irc.service.js'
-import { ObjectIdString } from '@utils/const.js'
-import { createResponseSchema } from '@utils/func.js'
+import { defaultHeadersSchema, errorSchema } from '@/common/schemas.ts'
+import type { UserDocument } from '@/features/users/module.ts'
+import { UserModel, userSchema } from '@/features/users/module.ts'
+import IRCClient from '@/common/services/irc.service.ts'
+import { ObjectIdString } from '@/utils/const.ts'
+import { createResponseSchema } from '@/utils/func.ts'
 
 const verifyUserSchema = Type.Object(
   {

@@ -3,10 +3,10 @@ import dotenv from 'dotenv'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest'
 
-import createApp from '~/app.js'
-import { client, connect } from '~/common/loaders/db.js'
-import IRCClient from '~/common/services/irc.service.js'
-import getDbHelper from '~/test/utils/db.js'
+import createApp from '@/app.ts'
+import { client, connect } from '@/common/loaders/db.ts'
+import IRCClient from '@/common/services/irc.service.ts'
+import getDbHelper from '@/test/utils/db.ts'
 
 dotenv.config()
 

@@ -1,6 +1,6 @@
-import registerUser from './actions/registerUser.action.js'
-import verifyUser from './actions/verifyUser.action.js'
-import login from './actions/login.action.js'
+import registerUser from './actions/registerUser.action.ts'
+import verifyUser from './actions/verifyUser.action.ts'
+import login from './actions/login.action.ts'
 
 export default {
   registerUser,

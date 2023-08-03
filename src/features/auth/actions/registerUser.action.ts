@@ -5,16 +5,12 @@ import type { FastifyInstance } from 'fastify'
 import type { DocumentForInsert } from 'papr'
 import { omit } from 'remeda'
 
-import { defaultHeadersSchema, errorSchema } from '@common/schemas.js'
-import {
-  UserDocument,
-  UserModel,
-  UserOptions,
-  userSchema
-} from '@features/users/module.js'
-import IRCClient from '@common/services/irc.service.js'
-import { Roles } from '@utils/const.js'
-import { createResponseSchema, generatePasswordHash } from '@utils/func.js'
+import { defaultHeadersSchema, errorSchema } from '@/common/schemas.ts'
+import type { UserDocument, UserOptions } from '@/features/users/module.ts'
+import { UserModel, userSchema } from '@/features/users/module.ts'
+import IRCClient from '@/common/services/irc.service.ts'
+import { Roles } from '@/utils/const.ts'
+import { createResponseSchema, generatePasswordHash } from '@/utils/func.ts'
 
 const bodySchema = Type.Omit(userSchema, [
   '_id',

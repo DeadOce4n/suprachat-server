@@ -4,14 +4,14 @@ import dayjs from 'dayjs'
 import type { FastifyInstance } from 'fastify'
 import { omit } from 'remeda'
 
-import { errorSchema } from '@common/schemas.js'
-import { UserModel } from '@features/users/module.js'
+import { errorSchema } from '@/common/schemas.ts'
+import { UserModel } from '@/features/users/module.ts'
 import {
   checkPasswordHash,
   checkPasswordHashErgo,
   createResponseSchema,
   generatePasswordHash
-} from '@utils/func.js'
+} from '@/utils/func.ts'
 
 const bodySchema = Type.Object({
   remember_me: Type.Boolean()

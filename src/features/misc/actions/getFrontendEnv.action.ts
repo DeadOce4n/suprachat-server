@@ -2,14 +2,14 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
 import type { FastifyInstance } from 'fastify'
 
-import { errorSchema } from '@common/schemas.js'
-import { createResponseSchema } from '@utils/func.js'
+import { errorSchema } from '@/common/schemas.ts'
+import { createResponseSchema } from '@/utils/func.ts'
 import {
   VERCEL_API_URL,
   VERCEL_PROJECT_ID,
   VERCEL_ACCESS_TOKEN,
   VERCEL_ENV_KEYS
-} from '@utils/const.js'
+} from '@/utils/const.ts'
 
 const querySchema = Type.Object({
   projectId: Type.String(),
