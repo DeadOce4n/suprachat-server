@@ -1,18 +1,6 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node LTS + ESM + Strictest",
-  "_version": "18.12.1",
   "compilerOptions": {
-    "lib": [
-      "es2022"
-    ],
-    "module": "es2022",
-    "target": "es2022",
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "exactOptionalPropertyTypes": false,
@@ -23,16 +11,18 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "importsNotUsedAsValues": "error",
     "checkJs": true,
-    "outDir": "dist/",
-    "baseUrl": "src/",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2023"],
+    "module": "nodenext",
+    "target": "es2022",
+    "moduleResolution": "node16",
+    "baseUrl": "./src",
+    "allowImportingTsExtensions": true,
     "paths": {
-      "~/*": ["*"],
-      "@common/*": ["common/*"],
-      "@features/*": ["features/*"],
-      "@utils/*": ["utils/*"],
-      "@services/*": ["services/*"]
+      "@/*": ["*"]
     }
   },
   "include": ["src/**/*"]
