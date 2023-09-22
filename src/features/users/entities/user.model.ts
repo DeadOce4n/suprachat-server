@@ -5,7 +5,7 @@ import { countries, URI_REGEX, Roles } from '@/utils/const.ts'
 
 const userSchema = schema(
   {
-    nick: types.string({ maxLength: 20, minLength: 3, required: true }),
+    nick: types.string({ maxLength: 32, minLength: 1, required: true }),
     password: types.string({ minLength: 8, required: true }),
     email: types.string({ minLength: 5, required: true }),
     country: types.enum([...countries], { required: false }),
