@@ -10,7 +10,7 @@ server.listen({ port: env.PORT, host: '0.0.0.0' }, async (err) => {
   server.log.debug(`\n${server.printRoutes()}`)
 
   const conn = connect.bind(server)
-  await conn(env.MONGO_URI, { family: env.IPV6 ? 6 : 4 })
+  await conn(env.MONGO_URI, { family: env.IPV6 === 'true' ? 6 : 4 })
 
   if (err) {
     server.log.error(err)
