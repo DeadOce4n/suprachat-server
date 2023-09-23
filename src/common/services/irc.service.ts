@@ -17,6 +17,13 @@ type VerifyParams = {
   code: string
 }
 
+type ChangePasswordParams = {
+  username: string
+  password: string
+  targetUser: string
+  newPassword: string
+}
+
 export default class IRCClient {
   private userIp: string
   private decoder: StatefulDecoder
@@ -156,6 +163,82 @@ export default class IRCClient {
         }
       })
       this.sendLine(new Line({ command: 'VERIFY', params: [username, code] }))
+    })
+  }
+
+  public changePassword({
+    username,
+    password,
+    targetUser,
+    newPassword
+  }: ChangePasswordParams) {
+    return new Promise<void>((resolve, reject) => {
+      this.connect(username)
+      this.socket.on('error', (error) => {
+        this.disconnect()
+        reject(error)
+      })
+      this.socket.on('data', (data) => {
+        const lines = this.decoder.push(Uint8Array.from(data))
+        if (lines) {
+          lines.forEach((line) => {
+            this.logger.debug(`IRCd Incoming Msg: ${line.format()}`)
+            if (line.command === 'PING') {
+              this.sendLine(new Line({ command: 'PONG', params: [] }))
+            } else if (line.command === 'ERROR' || line.command === 'FAIL') {
+              this.socket.emit(
+                'error',
+                new APIError('changePasswordError', line.params.at(-1))
+              )
+            } else if (line.command === 'CAP' && !line.params.includes('ACK')) {
+              if (line.params.some((param) => param.includes('sasl'))) {
+                this.sendLine(
+                  new Line({ command: 'CAP', params: ['REQ', 'sasl'] })
+                )
+              }
+            } else if (line.command === 'CAP' && line.params.includes('ACK')) {
+              this.sendLine(
+                new Line({ command: 'AUTHENTICATE', params: ['PLAIN'] })
+              )
+            } else if (
+              line.command === 'AUTHENTICATE' &&
+              line.params.includes('+')
+            ) {
+              this.sendLine(
+                new Line({
+                  command: 'AUTHENTICATE',
+                  params: [
+                    Buffer.from(
+                      `${username}\0${username}\0${password}`,
+                      'utf8'
+                    ).toString('base64')
+                  ]
+                })
+              )
+            } else if (line.command === '903') {
+              this.sendLine(new Line({ command: 'CAP', params: ['END'] }))
+              this.sendLine(
+                new Line({
+                  command: 'OPER',
+                  params: [env.IRCD_OPER_USER, env.IRCD_OPER_PASS]
+                })
+              )
+            } else if (
+              line.command === 'MODE' &&
+              line.params.includes('+acjknoqtuxv')
+            ) {
+              this.sendLine(
+                new Line({
+                  command: 'PRIVMSG',
+                  params: ['NICKSERV', `PASSWD ${targetUser} ${newPassword}`]
+                })
+              )
+              this.disconnect()
+              resolve()
+            }
+          })
+        }
+      })
     })
   }
 

@@ -1,9 +1,11 @@
+import type { FastifyRequest } from 'fastify'
 import { Type, type TSchema } from '@sinclair/typebox'
 import { createHash, pbkdf2, randomBytes } from 'crypto'
 import { promisify } from 'util'
 import bcrypt from 'bcrypt'
 
 import { OBJECTID_REGEX } from './const.ts'
+import { env } from './env.ts'
 
 export const createResponseSchema = <TData extends TSchema>(
   dataSchema: TData
@@ -102,3 +104,10 @@ export const StringEnum = <T extends string[]>(values: [...T]) =>
 
 export const isObjectIdString = (str: string) =>
   new RegExp(OBJECTID_REGEX).test(str)
+
+export const getUserIp = (request: FastifyRequest) =>
+  env.NODE_ENV === 'production'
+    ? request.headers['cf-connecting-ip']?.toString() ??
+      request.ips?.at(-1) ??
+      request.ip
+    : request.ip

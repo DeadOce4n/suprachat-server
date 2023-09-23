@@ -9,11 +9,14 @@ import {
   checkPasswordHash,
   createResponseSchema,
   generatePasswordHash,
+  getUserIp,
   StringEnum
 } from '@/utils/func.ts'
 import type { UserDocument } from '../entities/user.model.ts'
 import UserModel from '../entities/user.model.ts'
 import { userSchema } from '../schemas/user.schema.ts'
+import IRCClient from '@/common/services/irc.service.ts'
+import { env } from '@/utils/env.ts'
 
 const paramsSchema = Type.Object(
   {
@@ -96,6 +99,13 @@ export default async function (fastify: FastifyInstance) {
             }
           })
         }
+        const client = new IRCClient(getUserIp(request), this.log)
+        await client.changePassword({
+          username: env.IRCD_ADMIN_USER,
+          password: env.IRCD_ADMIN_PASS,
+          newPassword: request.body.password,
+          targetUser: user.nick
+        })
         updatePayload.password = await generatePasswordHash(
           request.body.password
         )
