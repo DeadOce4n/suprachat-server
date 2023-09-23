@@ -13,6 +13,7 @@ export default defineConfig({
       reporter: ['text', 'cobertura']
     },
     reporters: ['default', 'junit'],
-    outputFile: './coverage/junit.xml'
+    outputFile: './coverage/junit.xml',
+    setupFiles: ['dotenv/config']
   }
 })

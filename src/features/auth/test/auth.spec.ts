@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import dotenv from 'dotenv'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest'
 
@@ -7,8 +6,6 @@ import createApp from '@/app.ts'
 import { client, connect } from '@/common/loaders/db.ts'
 import IRCClient from '@/common/services/irc.service.ts'
 import getDbHelper from '@/test/utils/db.ts'
-
-dotenv.config()
 
 describe('test auth module actions', async () => {
   const mongod = await MongoMemoryServer.create()
