@@ -1,7 +1,7 @@
 import { schema, types } from 'papr'
 
 import papr from '@/common/loaders/db.ts'
-import { countries, URI_REGEX, Roles } from '@/utils/const.ts'
+import { countries, Roles } from '@/utils/const.ts'
 
 const userSchema = schema(
   {
@@ -16,10 +16,7 @@ const userSchema = schema(
     password_from: types.enum(['ergo' as const, 'supra' as const], {
       required: true
     }),
-    picture: types.string({
-      pattern: URI_REGEX,
-      required: false
-    }),
+    picture: types.string({ required: false }),
     role: types.enum(Object.values(Roles), { required: true })
   },
   { defaults: { verified: false, active: true, role: Roles.Normal } }
