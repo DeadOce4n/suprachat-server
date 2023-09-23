@@ -13,12 +13,12 @@ const createApp = async (opts: ReturnType<typeof getDefaultOpts> = {}) => {
   const app = fastify({ ...getDefaultOpts(), ...opts })
 
   app.register(jwt, {
-    secret: env.SECRET_KEY
+    secret: env.SECRET_KEY!
   })
 
   if (env.NODE_ENV !== 'test') {
     app.register(cors, {
-      origin: env.CORS_ORIGINS.split(',')
+      origin: env.CORS_ORIGINS!.split(',')
     })
   }
 

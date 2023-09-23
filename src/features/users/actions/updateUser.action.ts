@@ -101,8 +101,8 @@ export default async function (fastify: FastifyInstance) {
         }
         const client = new IRCClient(getUserIp(request), this.log)
         await client.changePassword({
-          username: env.IRCD_ADMIN_USER,
-          password: env.IRCD_ADMIN_PASS,
+          username: env.IRCD_ADMIN_USER!,
+          password: env.IRCD_ADMIN_PASS!,
           newPassword: request.body.password,
           targetUser: user.nick
         })

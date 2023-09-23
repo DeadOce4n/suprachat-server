@@ -52,12 +52,12 @@ export default class IRCClient {
   }
 
   private connect(username: string) {
-    this.socket.connect({ port: env.IRCD_PORT, host: env.IRCD_HOST })
+    this.socket.connect({ port: env.IRCD_PORT!, host: env.IRCD_HOST })
     this.socket.once('connect', () => {
       const connectCommands: ConstructorParameters<typeof Line>[0][] = [
         {
           command: 'WEBIRC',
-          params: [env.WEBIRC_PASS, '*', this.userIp, this.userIp, 'secure']
+          params: [env.WEBIRC_PASS!, '*', this.userIp, this.userIp, 'secure']
         },
         {
           command: 'CAP',
@@ -220,7 +220,7 @@ export default class IRCClient {
               this.sendLine(
                 new Line({
                   command: 'OPER',
-                  params: [env.IRCD_OPER_USER, env.IRCD_OPER_PASS]
+                  params: [env.IRCD_OPER_USER!, env.IRCD_OPER_PASS!]
                 })
               )
             } else if (

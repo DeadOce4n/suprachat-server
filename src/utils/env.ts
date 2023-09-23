@@ -65,6 +65,8 @@ const envSchema = Type.Object({
   IPV6: Type.String()
 })
 
-const loadEnv = compileParse(envSchema)
+const loadEnv = compileParse(
+  process.env.NODE_ENV === 'test' ? Type.Partial(envSchema) : envSchema
+)
 
 export const env = loadEnv(process.env)

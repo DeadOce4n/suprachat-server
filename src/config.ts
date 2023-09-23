@@ -20,7 +20,7 @@ export function getDefaultOpts() {
   } as const
 
   const defaultOpts: FastifyServerOptions = {
-    logger: envToLogger[env.NODE_ENV],
+    logger: envToLogger[env.NODE_ENV!],
     trustProxy: env.NODE_ENV === 'production'
   }
 
