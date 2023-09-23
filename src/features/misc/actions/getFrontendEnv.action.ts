@@ -4,12 +4,8 @@ import type { FastifyInstance } from 'fastify'
 
 import { errorSchema } from '@/common/schemas.ts'
 import { createResponseSchema } from '@/utils/func.ts'
-import {
-  VERCEL_API_URL,
-  VERCEL_PROJECT_ID,
-  VERCEL_ACCESS_TOKEN,
-  VERCEL_ENV_KEYS
-} from '@/utils/const.ts'
+import { VERCEL_ENV_KEYS } from '@/utils/const.ts'
+import { env } from '@/utils/env.ts'
 
 const querySchema = Type.Object({
   projectId: Type.String(),
@@ -51,11 +47,11 @@ export default async function (fastify: FastifyInstance) {
           }
         })
       }
-      const url = `${VERCEL_API_URL}/v1/projects/${VERCEL_PROJECT_ID}/env/${field}`
+      const url = `${env.VERCEL_API_URL}/v1/projects/${env.VERCEL_PROJECT_ID}/env/${field}`
 
       const response = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${VERCEL_ACCESS_TOKEN}`
+          Authorization: `Bearer ${env.VERCEL_ACCESS_TOKEN}`
         }
       })
 

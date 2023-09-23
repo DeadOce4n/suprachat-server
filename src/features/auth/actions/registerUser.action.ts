@@ -11,6 +11,7 @@ import { UserModel, userSchema } from '@/features/users/module.ts'
 import IRCClient from '@/common/services/irc.service.ts'
 import { Roles } from '@/utils/const.ts'
 import { createResponseSchema, generatePasswordHash } from '@/utils/func.ts'
+import { env } from '@/utils/env.ts'
 
 const bodySchema = Type.Omit(userSchema, [
   '_id',
@@ -76,7 +77,7 @@ export default async function (fastify: FastifyInstance) {
       }
 
       const userIp =
-        process.env.NODE_ENV === 'production'
+        env.NODE_ENV === 'production'
           ? request.headers['cf-connecting-ip'] ??
             request.ips?.at(-1) ??
             request.ip

@@ -2,13 +2,9 @@ import type { FastifyBaseLogger } from 'fastify'
 import { Line, StatefulDecoder, StatefulEncoder } from 'irctokens'
 import { Socket } from 'net'
 
-import {
-  FORBIDDEN_CHARS,
-  IRCD_HOST,
-  IRCD_PORT,
-  WEBIRC_PASS
-} from '@/utils/const.ts'
+import { FORBIDDEN_CHARS } from '@/utils/const.ts'
 import { APIError } from '@/utils/error.ts'
+import { env } from '@/utils/env.ts'
 
 type RegisterParams = {
   username: string
@@ -49,12 +45,12 @@ export default class IRCClient {
   }
 
   private connect(username: string) {
-    this.socket.connect({ port: IRCD_PORT, host: IRCD_HOST })
+    this.socket.connect({ port: env.IRCD_PORT, host: env.IRCD_HOST })
     this.socket.once('connect', () => {
       const connectCommands: ConstructorParameters<typeof Line>[0][] = [
         {
           command: 'WEBIRC',
-          params: [WEBIRC_PASS, '*', this.userIp, this.userIp, 'secure']
+          params: [env.WEBIRC_PASS, '*', this.userIp, this.userIp, 'secure']
         },
         {
           command: 'CAP',

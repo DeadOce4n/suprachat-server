@@ -8,18 +8,12 @@ import { nanoid } from 'nanoid/async'
 import sharp from 'sharp'
 
 import { errorSchema } from '@/common/schemas.ts'
-import {
-  ALLOWED_IMG_MIME_TYPES,
-  ObjectIdString,
-  PROFILE_PIC_MAX_SIZE,
-  Roles,
-  S3_BUCKET_NAME,
-  S3_REGION
-} from '@/utils/const.ts'
+import { ALLOWED_IMG_MIME_TYPES, ObjectIdString, Roles } from '@/utils/const.ts'
 import { createResponseSchema } from '@/utils/func.ts'
 import s3Client from '@/common/loaders/s3.ts'
 import type { UserDocument } from '../entities/user.model.ts'
 import UserModel from '../entities/user.model.ts'
+import { env } from '@/utils/env.ts'
 
 const paramsSchema = Type.Object({ _id: ObjectIdString })
 const responseSchema = createResponseSchema(
@@ -29,7 +23,7 @@ const responseSchema = createResponseSchema(
 export default async function (fastify: FastifyInstance) {
   fastify.register(multipart, {
     limits: {
-      fileSize: PROFILE_PIC_MAX_SIZE
+      fileSize: env.PROFILE_PIC_MAX_SIZE
     }
   })
   fastify.withTypeProvider<TypeBoxTypeProvider>().post(
@@ -114,13 +108,13 @@ export default async function (fastify: FastifyInstance) {
 
         await s3Client.send(
           new PutObjectCommand({
-            Bucket: S3_BUCKET_NAME,
+            Bucket: env.S3_BUCKET_NAME,
             Key: key,
             Body: await image.toBuffer()
           })
         )
 
-        const imageUrl = `https://${S3_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/${key}`
+        const imageUrl = `https://${env.S3_BUCKET_NAME}.s3.${env.S3_REGION}.amazonaws.com/${key}`
 
         await UserModel.updateOne(
           { _id: new ObjectId(_id) },

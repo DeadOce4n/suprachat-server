@@ -1,20 +1,5 @@
 import { Type } from '@sinclair/typebox'
 
-export const MONGO_URI = process.env.MONGO_URI
-export const DB_NAME = process.env.DB_NAME
-export const IRCD_HOST = process.env.IRCD_HOST
-export const IRCD_PORT = Number(process.env.IRCD_PORT)
-export const WEBIRC_PASS = process.env.WEBIRC_PASS
-export const PORT = Number(process.env.PORT)
-export const SECRET_KEY = process.env.SECRET_KEY
-export const LOG_LEVEL = process.env.LOG_LEVEL
-export const CORS_ORIGINS = (process.env.CORS_ORIGINS ?? '').split(',')
-export const { S3_SECRET_KEY, S3_ACCESS_KEY, S3_REGION, S3_BUCKET_NAME } =
-  process.env
-export const { VERCEL_API_URL, VERCEL_ACCESS_TOKEN, VERCEL_PROJECT_ID } =
-  process.env
-export const IPV6 = (process.env.IPV6 ?? 'true') === 'true'
-
 export const FORBIDDEN_CHARS = ' ,*?.!:<>\'";#~&@%+-'.split('')
 
 export const countries = [
@@ -221,8 +206,6 @@ export enum Roles {
   Normal = 'normal',
   Admin = 'admin'
 }
-
-export const PROFILE_PIC_MAX_SIZE = Number(process.env.PROFILE_PIC_MAX_SIZE)
 
 export const VERCEL_ENV_KEYS: Record<string, string> = {
   GATSBY_KIWI_URL: '6aH7glnqTjZKbrA8'

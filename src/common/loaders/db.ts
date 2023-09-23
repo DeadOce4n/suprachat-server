@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { MongoClient, type MongoClientOptions } from 'mongodb'
 import Papr from 'papr'
 
-import { DB_NAME } from '@/utils/const.ts'
+import { env } from '@/utils/env.ts'
 
 export let client: MongoClient
 
@@ -15,7 +15,7 @@ export async function connect(
 ) {
   client = await MongoClient.connect(uri, options)
 
-  papr.initialize(client.db(DB_NAME))
+  papr.initialize(client.db(env.DB_NAME))
   await papr.updateSchemas()
 
   !!this && this.log.debug(`Papr connected!`)

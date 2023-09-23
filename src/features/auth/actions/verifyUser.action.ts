@@ -9,6 +9,7 @@ import { UserModel, userSchema } from '@/features/users/module.ts'
 import IRCClient from '@/common/services/irc.service.ts'
 import { ObjectIdString } from '@/utils/const.ts'
 import { createResponseSchema } from '@/utils/func.ts'
+import { env } from '@/utils/env.ts'
 
 const verifyUserSchema = Type.Object(
   {
@@ -54,7 +55,7 @@ export default async function (fastify: FastifyInstance) {
       }
 
       const userIp =
-        process.env.NODE_ENV === 'production'
+        env.NODE_ENV === 'production'
           ? request.headers['cf-connecting-ip'] ??
             request.ips?.at(-1) ??
             request.ip

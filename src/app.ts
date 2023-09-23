@@ -5,22 +5,20 @@ import swaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
 
 import * as features from '@/features/features.ts'
-import { CORS_ORIGINS } from '@/utils/const.ts'
 import getErrorHandler from '@/utils/error.ts'
-import { getDefaultOpts, loadEnv } from './config.ts'
+import { getDefaultOpts } from './config.ts'
+import { env } from './utils/env.ts'
 
 const createApp = async (opts: ReturnType<typeof getDefaultOpts> = {}) => {
   const app = fastify({ ...getDefaultOpts(), ...opts })
 
-  loadEnv(app)
-
   app.register(jwt, {
-    secret: process.env.SECRET_KEY
+    secret: env.SECRET_KEY
   })
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (env.NODE_ENV !== 'test') {
     app.register(cors, {
-      origin: CORS_ORIGINS
+      origin: env.CORS_ORIGINS.split(',')
     })
   }
 
